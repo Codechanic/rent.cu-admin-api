@@ -15,3 +15,17 @@
 ###> symfony/web-server-bundle ###
 /.web-server-pid
 ###< symfony/web-server-bundle ###
+
+\.idea/misc\.xml
+
+\.idea/modules\.xml
+
+\.idea/php\.xml
+
+\.idea/rent_manager\.iml
+
+\.idea/symfony2\.xml
+
+\.idea/vcs\.xml
+
+\.idea/workspace\.xml
