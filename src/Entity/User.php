@@ -23,8 +23,6 @@ class User extends BaseUser
      */
     protected $id;
 
-
-
     /**
      * @param int $id
      * @return User
@@ -34,10 +32,6 @@ class User extends BaseUser
         $this->id = $id;
         return $this;
     }
-
-
-
-
 
     /**
      * @return string
@@ -65,8 +59,6 @@ class User extends BaseUser
         return $this->email;
     }
 
-
-
     /**
      * @return string
      */
@@ -75,8 +67,6 @@ class User extends BaseUser
         return $this->password;
     }
 
-
-
     /**
      * @return string
      */
@@ -84,7 +74,6 @@ class User extends BaseUser
     {
         return $this->salt;
     }
-
 
     /**
      * @return string|null
@@ -112,8 +101,6 @@ class User extends BaseUser
         return $this->enabled;
     }
 
-
-
     /**
      * @return \Doctrine\Common\Collections\Collection
      */
@@ -132,16 +119,12 @@ class User extends BaseUser
         return $this;
     }
 
-
-
     /**
      * @var string|null
      *
      * @ORM\Column(name="path", type="string", length=255, nullable=true)
      */
     protected $path;
-
-
 
     /**
      * @var \Doctrine\Common\Collections\Collection
@@ -166,5 +149,4 @@ class User extends BaseUser
         parent::__construct();
         $this->role = new \Doctrine\Common\Collections\ArrayCollection();
     }
-
 }

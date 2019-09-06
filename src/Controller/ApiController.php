@@ -63,7 +63,9 @@ class ApiController extends AbstractFOSRestController
      *
      * @SWG\Tag(name="User")
      */
-    public function getLoginCheckAction() {}
+    public function getLoginCheckAction()
+    {
+    }
 
     /**
      * @Rest\Get("/v1/home.{_format}", name="home_list_all", defaults={"_format":"json"})
@@ -79,15 +81,11 @@ class ApiController extends AbstractFOSRestController
      * )
      *
      *
-     *
      * @SWG\Tag(name="Homestay")
      */
-    public function getAllHomestayAction(Request $request, SerializerInterface  $jsmSerialize) {
-//        $serializer = $this->get('jms_serializer');
-        $serializer = $jsmSerialize;
+    public function getAllHomestayAction(Request $request, SerializerInterface $jsmSerialize)
+    {
         $em = $this->getDoctrine()->getManager();
-        $boards = [];
-        $message = "";
 
         try {
             $code = 200;
@@ -106,16 +104,22 @@ class ApiController extends AbstractFOSRestController
             $data = $serializer->serialize(
                 $boards, 'json');
 
+            $response = new JsonResponse($data, $code, [], true);
+            $response->headers->set('Content-Type', 'application/json');
+            $response->headers->set('Access-Control-Allow-Origin', '*');
+            $logger = $this->get('logger');
+            $logger->info($response);
 
-            return new JsonResponse($data,$code,[],true);
+
+            return $response;
 
         } catch (Exception $ex) {
             $code = 500;
             $error = true;
             $message = "An error has occurred trying to get all Houses - Error: {$ex->getMessage()}";
             return new JsonResponse([
-                'message'=>$message
-            ],$code);
+                'message' => $message
+            ], $code);
         }
     }
 }

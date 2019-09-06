@@ -173,6 +173,9 @@
             "./config/packages/lexik_jwt_authentication.yaml"
         ]
     },
+    "monolog/monolog": {
+        "version": "1.24.0"
+    },
     "namshi/jose": {
         "version": "7.2.3"
     },
@@ -187,6 +190,18 @@
         "files": [
             "./config/packages/nelmio_api_doc.yaml",
             "./config/routes/nelmio_api_doc.yaml"
+        ]
+    },
+    "nelmio/cors-bundle": {
+        "version": "1.5",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "1.5",
+            "ref": "6e1f64cc0f55362be49764634e8f14ce34a033c6"
+        },
+        "files": [
+            "./config/packages/nelmio_cors.yaml"
         ]
     },
     "ocramius/package-versions": {
@@ -322,6 +337,23 @@
     },
     "symfony/mime": {
         "version": "v4.3.4"
+    },
+    "symfony/monolog-bridge": {
+        "version": "v4.3.4"
+    },
+    "symfony/monolog-bundle": {
+        "version": "3.3",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "3.3",
+            "ref": "6240c6d43e8237a32452f057f81816820fd56ab6"
+        },
+        "files": [
+            "./config/packages/dev/monolog.yaml",
+            "./config/packages/prod/monolog.yaml",
+            "./config/packages/test/monolog.yaml"
+        ]
     },
     "symfony/options-resolver": {
         "version": "v4.3.4"
