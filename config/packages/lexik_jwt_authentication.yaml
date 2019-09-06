@@ -5,3 +5,16 @@ lexik_jwt_authentication:
     encoder:
         service: lexik_jwt_authentication.encoder.lcobucci
         signature_algorithm: RS512
+    token_extractors:
+        authorization_header:
+            enabled: true
+            prefix: Bearer
+            name: Authorization
+        cookie:
+            enabled: false
+            name: BEARER
+        query_parameter:
+            enabled: false
+            name: bearer
+
+
