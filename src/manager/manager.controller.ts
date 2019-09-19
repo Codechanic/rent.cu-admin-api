@@ -1,8 +1,8 @@
 import { Controller, Get, Param, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 
-import { ManagerService } from './manager.service';
-import { Manager } from './manager.entity';
+import { ManagerService } from '../services/manager.service';
+import { Manager } from '../model/manager.entity';
 
 /**
  * Manager api endpoints

@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Logger, Param, Post, Put, UseGuards } from '@nestjs/common';
 
-import { HouseService } from './house.service';
-import { House } from './house.entity';
+import { HouseService } from '../services/house.service';
+import { House } from '../model/house.entity';
 import { AuthGuard } from '@nestjs/passport';
 
 /**

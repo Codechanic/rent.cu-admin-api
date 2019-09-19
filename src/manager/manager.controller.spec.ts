@@ -3,8 +3,8 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 
 import { Repository } from 'typeorm';
 
-import { Manager } from './manager.entity';
-import { ManagerService } from './manager.service';
+import { Manager } from '../model/manager.entity';
+import { ManagerService } from '../services/manager.service';
 import { ManagerController } from './manager.controller';
 
 describe('Manager Controller', () => {

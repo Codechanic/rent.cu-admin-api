@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { HouseController } from './house.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { House } from './house.entity';
-import { HouseService } from './house.service';
+import { House } from '../model/house.entity';
+import { HouseService } from '../services/house.service';
 
 @Module({
   controllers: [HouseController],

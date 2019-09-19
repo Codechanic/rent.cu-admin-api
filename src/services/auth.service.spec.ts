@@ -5,11 +5,11 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { AuthService } from './auth.service';
-import { ManagerService } from '../manager/manager.service';
-import { UsersService } from '../users/users.service';
-import { User } from '../users/user.entity';
-import { Manager } from '../manager/manager.entity';
-import { jwtConstants } from './constants';
+import { ManagerService } from './manager.service';
+import { UsersService } from './users.service';
+import { User } from '../model/user.entity';
+import { Manager } from '../model/manager.entity';
+import { jwtConstants } from '../auth/constants';
 
 describe('AuthService', () => {
     let authService: AuthService;
