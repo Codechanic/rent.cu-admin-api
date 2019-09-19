@@ -2,8 +2,8 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { ManagerController } from './manager.controller';
-import { ManagerService } from './manager.service';
-import { Manager } from './manager.entity';
+import { ManagerService } from '../services/manager.service';
+import { Manager } from '../model/manager.entity';
 
 @Module({
   controllers: [ManagerController],
