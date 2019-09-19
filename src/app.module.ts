@@ -7,9 +7,9 @@ import { AuthModule } from './auth/auth.module';
 import { HouseModule } from './house/house.module';
 import { UsersModule } from './users/users.module';
 import { ManagerModule } from './manager/manager.module';
-import { User } from './users/user.entity';
-import { House } from './house/house.entity';
-import { Manager } from './manager/manager.entity';
+import { User } from './model/user.entity';
+import { House } from './model/house.entity';
+import { Manager } from './model/manager.entity';
 
 /**
  * Main app module

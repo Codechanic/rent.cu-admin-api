@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Manager } from './manager.entity';
+import { Manager } from '../model/manager.entity';
 import { Repository } from 'typeorm';
 
 /**

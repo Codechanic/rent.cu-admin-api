@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 
-import { UsersService } from '../users/users.service';
+import { UsersService } from './users.service';
 import { JwtService } from '@nestjs/jwt';
-import { User } from '../users/user.entity';
-import { ManagerService } from '../manager/manager.service';
-import { Manager } from '../manager/manager.entity';
+import { User } from '../model/user.entity';
+import { ManagerService } from './manager.service';
+import { Manager } from '../model/manager.entity';
 
 /**
  * Authentication service

@@ -2,9 +2,9 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 
 import { HouseController } from './house.controller';
-import { HouseService } from './house.service';
+import { HouseService } from '../services/house.service';
 import { Repository } from 'typeorm';
-import { House } from './house.entity';
+import { House } from '../model/house.entity';
 
 describe('House Controller', () => {
     let controller: HouseController;

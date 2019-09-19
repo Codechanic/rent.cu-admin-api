@@ -1,13 +1,13 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { AppController } from './app.controller';
-import { AuthService } from './auth/auth.service';
-import { UsersService } from './users/users.service';
-import { ManagerService } from './manager/manager.service';
+import { AuthService } from './services/auth.service';
+import { UsersService } from './services/users.service';
+import { ManagerService } from './services/manager.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { User } from './users/user.entity';
+import { User } from './model/user.entity';
 import { Repository } from 'typeorm';
-import { Manager } from './manager/manager.entity';
+import { Manager } from './model/manager.entity';
 import { JwtModule } from '@nestjs/jwt';
 import { jwtConstants } from './auth/constants';
 
