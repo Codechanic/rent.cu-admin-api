@@ -23,7 +23,7 @@ import { Manager } from './model/manager.entity';
       port: 3306,
       username: 'root',
       password: '',
-      database: 'standard-rent-system',
+      database: 'havanacity_db_dev',
       entities: [User, House, Manager],
       synchronize: true,
       logging: ['query'],

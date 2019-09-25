@@ -5,7 +5,7 @@ import { JwtService } from '@nestjs/jwt';
 import { User } from '../model/user.entity';
 import { ManagerService } from './manager.service';
 import { Manager } from '../model/manager.entity';
-
+import * as CryptoJS from 'crypto';
 /**
  * Authentication service
  */
