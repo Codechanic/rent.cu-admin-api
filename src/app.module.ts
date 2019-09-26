@@ -7,9 +7,7 @@ import { AuthModule } from './auth/auth.module';
 import { HouseModule } from './house/house.module';
 import { UsersModule } from './users/users.module';
 import { ManagerModule } from './manager/manager.module';
-import { User } from './model/user.entity';
-import { House } from './model/house.entity';
-import { Manager } from './model/manager.entity';
+import { User } from './model/user';
 
 /**
  * Main app module
@@ -19,12 +17,12 @@ import { Manager } from './model/manager.entity';
   imports: [
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: 'localhost',
+      host: '127.0.0.1',
       port: 3306,
       username: 'root',
       password: '',
       database: 'havanacity_db_dev',
-      entities: [User, House, Manager],
+      entities: [User],
       synchronize: true,
       logging: ['query'],
     }),
