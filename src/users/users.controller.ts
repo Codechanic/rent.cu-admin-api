@@ -2,7 +2,7 @@ import { Controller, Get, UseGuards } from '@nestjs/common';
 import { UsersService } from '../services/users.service';
 import { AuthGuard } from '@nestjs/passport';
 
-import { User } from '../model/user.entity';
+import { User } from '../model/user';
 
 /**
  * User api endpoints

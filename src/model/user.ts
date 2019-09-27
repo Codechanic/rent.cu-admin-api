@@ -1,6 +1,17 @@
 import {
-  BaseEntity, Column, Entity, Index, JoinColumn, JoinTable, ManyToMany, ManyToOne,
-  OneToMany, OneToOne, PrimaryColumn, PrimaryGeneratedColumn, RelationId,
+  BaseEntity,
+  Column,
+  Entity,
+  Index,
+  JoinColumn,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+  OneToMany,
+  OneToOne,
+  PrimaryColumn,
+  PrimaryGeneratedColumn,
+  RelationId,
 } from 'typeorm';
 import { AcmeRole } from './acme_role';
 
@@ -61,33 +72,33 @@ export class User {
     length: 180,
     name: 'username_canonical',
   })
-  userNameCanonical: string;
+  username_canonical: string;
 
   @Column('varchar', {
     nullable: false,
     length: 180,
     name: 'email_canonical',
   })
-  emailCanonical: string;
+  email_canonical: string;
 
   @Column('datetime', {
     nullable: true,
     name: 'last_login',
   })
-  lastLogin: Date | null;
+  last_login: Date | null;
 
   @Column('varchar', {
     nullable: true,
     length: 180,
     name: 'confirmation_token',
   })
-  confirmationToken: string | null;
+  confirmation_token: string | null;
 
   @Column('datetime', {
     nullable: true,
     name: 'password_requested_at',
   })
-  passwordRequestedAt: Date | null;
+  password_requested_at: Date | null;
 
   @Column('longtext', {
     nullable: false,
@@ -95,15 +106,8 @@ export class User {
   })
   roles: string;
 
-  @Column('varchar', {
-    nullable: true,
-    length: 180,
-    name: 'name',
-  })
-  name: string | null;
-
-   @ManyToMany(() => AcmeRole, (acmeRole: AcmeRole) => acmeRole.users, { nullable: false })
-   @JoinTable({ name: 'user_role' })
-   acmeRoles: AcmeRole[];
+  @ManyToMany(() => AcmeRole, (acme_role: AcmeRole) => acme_role.users, { nullable: false })
+  @JoinTable({ name: 'user_role' })
+  acmeRoles: AcmeRole[];
 
 }

@@ -1,12 +1,15 @@
-{
+[
+  {
+    "name": "default",
     "type": "mysql",
-    "host": "localhost",
+    "host": "127.0.0.1",
     "port": 3306,
     "username": "root",
-    "password": "",
-    "database": "havanacity_db_dev",
-    "entities": ["src/**/*.entity{.ts,.js}"],
-    "synchronize": true,
-    "logging": ["query"]
+    "password": "null",
+    "database": "havanacity_db",
+    "synchronize": false,
+    "entities": [
+      "entities/*.js"
+    ]
   }
-  
+]

@@ -40,7 +40,7 @@ export class AcmeRole {
   })
   role: string;
 
-   @ManyToMany(() => User, (user: User) => user.acmeRoles)
-   users: User[];
+  @ManyToMany(() => User, (user: User) => user.acmeRoles)
+  users: User[];
 
 }

@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 
 import { UsersService } from './users.service';
 import { JwtService } from '@nestjs/jwt';
-import { User } from '../model/user.entity';
+import { User } from '../model/user';
 import { ManagerService } from './manager.service';
 import { Manager } from '../model/manager.entity';
 import * as CryptoJS from 'crypto';
@@ -37,7 +37,7 @@ export class AuthService {
 
     /* if there is one, return it, otherwise, return null*/
     if (user && user.password === pass) {
-      return { username: user.username, id: user.id, managerId: user.managerProfile.id };
+      return { username: user.username, id: user.id, managerId: user.acmeRoles };
     }
     return null;
   }
@@ -69,8 +69,7 @@ export class AuthService {
     const user = new User();
     user.username = payload.username;
     user.password = payload.password;
-    user.managerProfile = manager;
     const registeredUser = await this.usersService.create(user);
-    return await this.login({ ...registeredUser, managerId: user.managerProfile.id });
+    return await this.login({ ...registeredUser, managerId: user.acmeRoles });
   }
 }
