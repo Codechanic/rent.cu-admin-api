@@ -72,33 +72,33 @@ export class User {
     length: 180,
     name: 'username_canonical',
   })
-  username_canonical: string;
+  usernameCanonical: string;
 
   @Column('varchar', {
     nullable: false,
     length: 180,
     name: 'email_canonical',
   })
-  email_canonical: string;
+  emailCanonical: string;
 
   @Column('datetime', {
     nullable: true,
     name: 'last_login',
   })
-  last_login: Date | null;
+  lastLogin: Date | null;
 
   @Column('varchar', {
     nullable: true,
     length: 180,
     name: 'confirmation_token',
   })
-  confirmation_token: string | null;
+  confirmationToken: string | null;
 
   @Column('datetime', {
     nullable: true,
     name: 'password_requested_at',
   })
-  password_requested_at: Date | null;
+  passwordRequestedAt: Date | null;
 
   @Column('longtext', {
     nullable: false,
@@ -106,7 +106,7 @@ export class User {
   })
   roles: string;
 
-  @ManyToMany(() => AcmeRole, (acme_role: AcmeRole) => acme_role.users, { nullable: false })
+  @ManyToMany(() => AcmeRole, (acmeRole: AcmeRole) => acmeRole.users, { nullable: false })
   @JoinTable({ name: 'user_role' })
   acmeRoles: AcmeRole[];
 

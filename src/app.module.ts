@@ -4,9 +4,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { AppController } from './app.controller';
 import { AuthModule } from './auth/auth.module';
-import { HouseModule } from './house/house.module';
 import { UsersModule } from './users/users.module';
-import { ManagerModule } from './manager/manager.module';
+import { AcmeRole } from './model/acme_role';
 import { User } from './model/user';
 
 /**
@@ -21,15 +20,13 @@ import { User } from './model/user';
       port: 3306,
       username: 'root',
       password: '',
+      entities: [User, AcmeRole],
       database: 'havanacity_db',
-      entities: [User, House, Manager],
       synchronize: true,
       logging: ['query'],
     }),
-    HouseModule,
     AuthModule,
     UsersModule,
-    ManagerModule,
   ],
   controllers: [AppController],
 })

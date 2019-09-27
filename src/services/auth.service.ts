@@ -3,8 +3,6 @@ import { Injectable } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '../model/user';
-import { ManagerService } from './manager.service';
-import { Manager } from '../model/manager.entity';
 import * as CryptoJS from 'crypto';
 /**
  * Authentication service
@@ -15,12 +13,10 @@ export class AuthService {
   /**
    * Service constructor
    * @param usersService Instance of UserService
-   * @param managerService Instance of ManagerService
    * @param jwtService Instance of JWT manipulation service
    */
   constructor(
     private readonly usersService: UsersService,
-    private readonly managerService: ManagerService,
     private readonly jwtService: JwtService,
   ) {
   }
@@ -37,7 +33,7 @@ export class AuthService {
 
     /* if there is one, return it, otherwise, return null*/
     if (user && user.password === pass) {
-      return { username: user.username, id: user.id, managerId: user.acmeRoles };
+      return { username: user.username, id: user.id };
     }
     return null;
   }
@@ -49,7 +45,7 @@ export class AuthService {
   async login(user: any) {
 
     /* create the payload that will be encrypted in jwt and return it */
-    const payload = { username: user.username, sub: user.id, managerId: user.managerId };
+    const payload = { username: user.username, sub: user.id };
     return {
       access_token: this.jwtService.sign(payload),
     };
@@ -62,14 +58,10 @@ export class AuthService {
   async register(payload: any) {
 
     /* create the new User object and execute login process*/
-    const manager = new Manager();
-    manager.email = payload.email;
-    manager.name = payload.name;
-    manager.lastName = payload.lastName;
     const user = new User();
     user.username = payload.username;
     user.password = payload.password;
     const registeredUser = await this.usersService.create(user);
-    return await this.login({ ...registeredUser, managerId: user.acmeRoles });
+    return await this.login({ ...registeredUser });
   }
 }

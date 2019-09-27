@@ -6,7 +6,6 @@ import { LocalStrategy } from '../services/local.strategy';
 import { jwtConstants } from './constants';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from '../services/jwt.strategy';
-import { ManagerModule } from '../manager/manager.module';
 
 /**
  * Authentication module
@@ -20,7 +19,6 @@ import { ManagerModule } from '../manager/manager.module';
   ],
   imports: [
     UsersModule,
-    ManagerModule,
     PassportModule,
     JwtModule.register({
       secret: jwtConstants.secret,
