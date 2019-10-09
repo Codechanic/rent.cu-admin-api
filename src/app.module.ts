@@ -8,17 +8,8 @@ import { UsersModule } from './users/users.module';
 import { AcmeRole } from './model/acme_role';
 import { User } from './model/user';
 import { FormModule } from './form/form.module';
-import { Province } from './model/province';
-import { ProvinceTranslations } from './model/province_translations';
-import { Municipality } from './model/municipality';
-import { MunicipalityTranslations } from './model/municipality_translations';
-import { AccommodationType } from './model/accommodationType';
-import { AccommodationTypeTranslations } from './model/acommodationtype_translations';
-import { LocationType } from './model/location';
-import { FreeService } from './model/homestay_freeservices';
-import { Place } from './model/place';
-import { NotOffered } from './model/homestay_notoffered';
-import { ExtraCost } from './model/homestay_extracost';
+import entities from './house/house.entities';
+import { HouseModule } from './house/house.module';
 
 /**
  * Main app module
@@ -35,17 +26,7 @@ import { ExtraCost } from './model/homestay_extracost';
       entities: [
         User,
         AcmeRole,
-        Province,
-        ProvinceTranslations,
-        Municipality,
-        MunicipalityTranslations,
-        AccommodationType,
-        AccommodationTypeTranslations,
-        LocationType,
-        FreeService,
-        Place,
-        NotOffered,
-        ExtraCost,
+        ...entities,
       ],
       database: 'havanacity_db',
       synchronize: true,
@@ -53,6 +34,7 @@ import { ExtraCost } from './model/homestay_extracost';
     }),
     AuthModule,
     UsersModule,
+    HouseModule,
     FormModule,
   ],
   controllers: [AppController],

@@ -15,6 +15,7 @@ import {
 } from 'typeorm';
 import { Province } from './province';
 import { MunicipalityTranslations } from './municipality_translations';
+import { HomeStay } from './homestay';
 
 @Entity('municipality', { schema: 'havanacity_db' })
 @Index('UNIQ_C6F566285E237E06', ['name'], { unique: true })
@@ -74,4 +75,6 @@ export class Municipality {
   })
   municipalityTranslationss: MunicipalityTranslations[];
 
+  @OneToMany(() => HomeStay, (homeStay: HomeStay) => homeStay.municipality, { onDelete: 'RESTRICT', onUpdate: 'RESTRICT' })
+  homestays: HomeStay[];
 }

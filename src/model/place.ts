@@ -13,6 +13,7 @@ import {
   PrimaryGeneratedColumn,
   RelationId,
 } from 'typeorm';
+import { HomeStay } from './homestay';
 
 @Entity('place', { schema: 'havanacity_db' })
 export class Place {
@@ -91,5 +92,8 @@ export class Place {
     name: 'phones',
   })
   phones: string | null;
+
+  @ManyToMany(() => HomeStay, (homeStay: HomeStay) => homeStay.places)
+  homestays: HomeStay[];
 
 }

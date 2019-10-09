@@ -2,11 +2,12 @@ import {
   BaseEntity,
   Column,
   Entity,
-  Index,
+  Index, ManyToMany,
   PrimaryColumn,
   PrimaryGeneratedColumn,
   RelationId,
 } from 'typeorm';
+import { HomeStay } from './homestay';
 
 @Entity('homestay_notoffered', { schema: 'havanacity_db' })
 @Index('UNIQ_36E7AD625E237E06', ['name'], { unique: true })
@@ -24,5 +25,8 @@ export class NotOffered {
     name: 'name',
   })
   name: string;
+
+  @ManyToMany(() => HomeStay, (homeStay: HomeStay) => homeStay.homestayNotoffereds)
+  homestays: HomeStay[];
 
 }

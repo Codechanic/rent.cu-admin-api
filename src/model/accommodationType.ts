@@ -14,6 +14,7 @@ import {
   RelationId,
 } from 'typeorm';
 import { AccommodationTypeTranslations } from './acommodationtype_translations';
+import { HomeStay } from './homestay';
 
 @Entity('acommodationtype', { schema: 'havanacity_db' })
 @Index('UNIQ_198CAD195E237E06', ['name'], { unique: true })
@@ -45,5 +46,8 @@ export class AccommodationType {
       onUpdate: 'RESTRICT',
     })
   acommodationtypeTranslationss: AccommodationTypeTranslations[];
+
+  @OneToMany(() => HomeStay, (homeStay: HomeStay) => homeStay.acommodation, { onDelete: 'SET NULL', onUpdate: 'RESTRICT' })
+  homestays: HomeStay[];
 
 }
