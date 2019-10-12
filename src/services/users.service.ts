@@ -31,7 +31,7 @@ export class UsersService {
    * @param username User's username
    */
   async findOne(username: string): Promise<User> {
-    return await this.userRepository.findOne({ where: { username }, relations: ['managerProfile'] });
+    return await this.userRepository.findOne({ where: { username }});
   }
 
   /**

@@ -3,7 +3,8 @@ import { Injectable } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '../model/user';
-import * as CryptoJS from 'crypto';
+// tslint:disable-next-line:no-var-requires
+const CryptoJS = require('crypto-js');
 /**
  * Authentication service
  */
@@ -27,10 +28,8 @@ export class AuthService {
    * @param pass User's password
    */
   async validateUser(username: string, pass: string): Promise<any> {
-
     /* try to get a user from user service */
     const user = await this.usersService.findOne(username);
-
     /* if there is one, return it, otherwise, return null*/
     if (user /*&& user.password === pass*/) {
       return { username: user.username, id: user.id };
@@ -48,6 +47,7 @@ export class AuthService {
     const payload = { username: user.username, sub: user.id };
     return {
       access_token: this.jwtService.sign(payload),
+      resume: CryptoJS.SHA512(user.username).toString(),
     };
   }
 

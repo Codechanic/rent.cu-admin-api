@@ -20,7 +20,8 @@ import { ExtraCost } from '../model/homestay_extracost';
 @Module({
   controllers: [FormDataController],
   imports: [TypeOrmModule.forFeature(
-    [Municipality,
+    [
+      Municipality,
       MunicipalityTranslations,
       Province,
       ProvinceTranslations,

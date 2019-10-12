@@ -21,7 +21,7 @@ import { Comment } from './comment';
 import { HomeStayPrice } from './homestay_price';
 import { HomeStayTranslations } from './homestay_translations';
 import { RCUContactForm } from './rcu_contactform';
-import {  RCUPromo } from './rcu_promo';
+import { RCUPromo } from './rcu_promo';
 import { Season } from './season';
 import { ExtraCost } from './homestay_extracost';
 import { FreeService } from './homestay_freeservices';
@@ -29,6 +29,7 @@ import { Interest } from './interest';
 import { NotOffered } from './homestay_notoffered';
 import { Place } from './place';
 import { MailingHomeStay } from './mailinghomestay';
+import { User } from './user';
 
 @Entity('homestay', { schema: 'havanacity_db' })
 @Index('UNIQ_8127E0525E237E06', ['name'], { unique: true })
@@ -238,6 +239,7 @@ export class HomeStay {
   })
   homestayTranslationss: HomeStayTranslations[];
 
+  // tslint:disable-next-line:max-line-length
   @OneToMany(() => RCUContactForm, (rcuContactForm: RCUContactForm) => rcuContactForm.homestay, { onDelete: 'RESTRICT', onUpdate: 'RESTRICT' })
   rcuContactforms: RCUContactForm[];
 
@@ -270,5 +272,9 @@ export class HomeStay {
 
   @ManyToMany(() => MailingHomeStay, (mailingHomeStay: MailingHomeStay) => mailingHomeStay.homestays)
   mailinghomestays: MailingHomeStay[];
+
+  @ManyToOne(() => User)
+  @JoinColumn({ name: 'owner_id' })
+  ownerId: bigint;
 
 }
