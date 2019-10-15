@@ -1,8 +1,9 @@
-import { Body, Controller, Delete, Get, Logger, Param, Post, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Logger, Param, Post, Put, Req, UseGuards } from '@nestjs/common';
 
 import { HouseService } from '../services/house.service';
 import { AuthGuard } from '@nestjs/passport';
 import { HomeStay } from '../model/homestay';
+import { MailerService } from '@nest-modules/mailer';
 
 /**
  * House api endpoints
@@ -14,7 +15,7 @@ export class HouseController {
    * Controller constructor
    * @param houseService Instance of HouseService
    */
-  constructor(private readonly houseService: HouseService) {
+  constructor(private readonly houseService: HouseService, private readonly mailerService: MailerService) {
   }
 
   /**
@@ -43,8 +44,32 @@ export class HouseController {
 
   @UseGuards(AuthGuard('jwt'))
   @Post('create')
-  async create(@Body() house: HomeStay) {
-    return this.houseService.create(house);
+  async create(@Body() house: HomeStay, @Req() request: any) {
+    return this.houseService
+      .create(house)
+      .then(() => {
+        // @ts-ignore
+        const user = request.user;
+        this
+          .mailerService
+          .sendMail({
+            // @ts-ignore
+            to: user.username,
+            from: 'noreply@nestjs.com',
+            subject: 'Usted ha creado una casa  ✔',
+            text: 'Usted ha creado una casa',
+            html: '<b>Usted ha creado una casa</b>',
+          });
+        this
+          .mailerService
+          .sendMail({
+            to: 'booking@rent.cu',
+            from: 'noreply@nestjs.com',
+            subject: 'Usted ha creado una casa  ✔',
+            text: 'Usted ha creado una casa',
+            html: '<b>Usted ha creado una casa</b>',
+          });
+      });
   }
 
   @UseGuards(AuthGuard('jwt'))

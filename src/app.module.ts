@@ -10,6 +10,7 @@ import { User } from './model/user';
 import { FormModule } from './form/form.module';
 import entities from './house/house.entities';
 import { HouseModule } from './house/house.module';
+import { HandlebarsAdapter, MailerModule } from '@nest-modules/mailer';
 
 /**
  * Main app module
@@ -31,6 +32,19 @@ import { HouseModule } from './house/house.module';
       database: 'havanacity_db',
       synchronize: true,
       logging: ['query'],
+    }),
+    MailerModule.forRoot({
+      transport: 'smtp://localhost',
+      defaults: {
+        from: '"booking.rent.cu" <booking@rent.cu>',
+      },
+      template: {
+        dir: __dirname + '/templates',
+        adapter: new HandlebarsAdapter(),
+        options: {
+          strict: true,
+        },
+      },
     }),
     AuthModule,
     UsersModule,
