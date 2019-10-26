@@ -16,7 +16,7 @@ import {
 import { Municipality } from './municipality';
 import { ProvinceTranslations } from './province_translations';
 
-@Entity('province', { schema: 'havanacity_db' })
+@Entity('province', { schema: 'havanacity_db_dev' })
 @Index('UNIQ_4ADAD40B5E237E06', ['name'], { unique: true })
 export class Province {
 

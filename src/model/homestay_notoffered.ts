@@ -9,7 +9,7 @@ import {
 } from 'typeorm';
 import { HomeStay } from './homestay';
 
-@Entity('homestay_notoffered', { schema: 'havanacity_db' })
+@Entity('homestay_notoffered', { schema: 'havanacity_db_dev' })
 @Index('UNIQ_36E7AD625E237E06', ['name'], { unique: true })
 export class NotOffered {
 

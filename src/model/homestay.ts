@@ -31,7 +31,7 @@ import { Place } from './place';
 import { MailingHomeStay } from './mailinghomestay';
 import { User } from './user';
 
-@Entity('homestay', { schema: 'havanacity_db' })
+@Entity('homestay', { schema: 'havanacity_db_dev' })
 @Index('UNIQ_8127E0525E237E06', ['name'], { unique: true })
 @Index('UNIQ_8127E052E7927C74', ['email'], { unique: true })
 @Index('IDX_8127E0528BF177F8', ['acommodation'])

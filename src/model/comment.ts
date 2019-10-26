@@ -16,7 +16,7 @@ import {
 import { HomeStay } from './homestay';
 import { CommentTranslations } from './comment_translations';
 
-@Entity('comment', { schema: 'havanacity_db' })
+@Entity('comment', { schema: 'havanacity_db_dev' })
 @Index('UNIQ_9474526C5E237E06', ['name'], { unique: true })
 @Index('IDX_9474526CF20D79E8', ['homestay'])
 export class Comment {

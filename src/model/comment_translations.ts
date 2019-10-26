@@ -15,7 +15,7 @@ import {
 } from 'typeorm';
 import { Comment } from './comment';
 
-@Entity('comment_translations', { schema: 'havanacity_db' })
+@Entity('comment_translations', { schema: 'havanacity_db_dev' })
 @Index('lookup_unique_idx', ['locale', 'object', 'field'], { unique: true })
 @Index('IDX_5E5E16FA232D562B', ['object'])
 export class CommentTranslations {

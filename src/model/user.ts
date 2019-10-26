@@ -15,7 +15,7 @@ import {
 } from 'typeorm';
 import { AcmeRole } from './acme_role';
 
-@Entity('user', { schema: 'havanacity_db' })
+@Entity('user', { schema: 'havanacity_db_dev' })
 @Index('UNIQ_8D93D649F85E0677', ['username'], { unique: true })
 @Index('UNIQ_8D93D649E7927C74', ['email'], { unique: true })
 export class User {

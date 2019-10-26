@@ -15,7 +15,7 @@ import {
 } from 'typeorm';
 import { HomeStay } from './homestay';
 
-@Entity('place', { schema: 'havanacity_db' })
+@Entity('place', { schema: 'havanacity_db_dev' })
 export class Place {
 
   @PrimaryGeneratedColumn({

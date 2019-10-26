@@ -16,7 +16,7 @@ import {
 import { HomeStay } from './homestay';
 import { Season } from './season';
 
-@Entity('homestay_chain', { schema: 'havanacity_db' })
+@Entity('homestay_chain', { schema: 'havanacity_db_dev' })
 export class HomeStayChain {
 
   @PrimaryGeneratedColumn({

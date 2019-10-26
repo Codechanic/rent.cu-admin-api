@@ -15,7 +15,7 @@ import {
 } from 'typeorm';
 import { HomeStay } from './homestay';
 
-@Entity('rcu_contactform', { schema: 'havanacity_db' })
+@Entity('rcu_contactform', { schema: 'havanacity_db_dev' })
 @Index('IDX_E9DFFCA3F20D79E8', ['homestay'])
 export class RCUContactForm {
 

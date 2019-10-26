@@ -15,7 +15,7 @@ import {
 } from 'typeorm';
 import { RCUPromo } from './rcu_promo';
 
-@Entity('rcu_promo_translations', { schema: 'havanacity_db' })
+@Entity('rcu_promo_translations', { schema: 'havanacity_db_dev' })
 @Index('lookup_unique_idx', ['locale', 'object', 'field'], { unique: true })
 @Index('IDX_B55F71F9232D562B', ['object'])
 export class RCUPromoTranslations {

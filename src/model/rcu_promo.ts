@@ -16,7 +16,7 @@ import {
 import { HomeStay } from './homestay';
 import { RCUPromoTranslations } from './rcu_promo_translations';
 
-@Entity('rcu_promo', { schema: 'havanacity_db' })
+@Entity('rcu_promo', { schema: 'havanacity_db_dev' })
 @Index('IDX_538170EDF20D79E8', ['homestay'])
 export class RCUPromo {
 

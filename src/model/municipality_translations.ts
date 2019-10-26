@@ -15,7 +15,7 @@ import {
 } from 'typeorm';
 import { Municipality } from './municipality';
 
-@Entity('municipality_translations', { schema: 'havanacity_db' })
+@Entity('municipality_translations', { schema: 'havanacity_db_dev' })
 @Index('lookup_unique_idx', ['locale', 'object', 'field'], { unique: true })
 @Index('IDX_3FCB5C96232D562B', ['object'])
 export class MunicipalityTranslations {

@@ -16,7 +16,7 @@ import {
 import { MailingHomeStayTranslations } from './mailinghomestay_translations';
 import { HomeStay } from './homestay';
 
-@Entity('mailinghomestay', { schema: 'havanacity_db' })
+@Entity('mailinghomestay', { schema: 'havanacity_db_dev' })
 export class MailingHomeStay {
 
   @PrimaryGeneratedColumn({

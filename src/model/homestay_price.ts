@@ -16,7 +16,7 @@ import {
 import { Season } from './season';
 import { HomeStay } from './homestay';
 
-@Entity('homestay_price', { schema: 'havanacity_db' })
+@Entity('homestay_price', { schema: 'havanacity_db_dev' })
 @Index('IDX_F47046564EC001D1', ['season'])
 @Index('IDX_F4704656F20D79E8', ['homestay'])
 export class HomeStayPrice {

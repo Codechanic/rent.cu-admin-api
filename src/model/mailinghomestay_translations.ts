@@ -15,7 +15,7 @@ import {
 } from 'typeorm';
 import { MailingHomeStay } from './mailinghomestay';
 
-@Entity('mailinghomestay_translations', { schema: 'havanacity_db' })
+@Entity('mailinghomestay_translations', { schema: 'havanacity_db_dev' })
 @Index('lookup_unique_idx', ['locale', 'object', 'field'], { unique: true })
 @Index('IDX_9888365C232D562B', ['object'])
 export class MailingHomeStayTranslations {

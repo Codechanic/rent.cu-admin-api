@@ -29,7 +29,7 @@ import { HandlebarsAdapter, MailerModule } from '@nest-modules/mailer';
         AcmeRole,
         ...entities,
       ],
-      database: 'havanacity_db',
+      database: 'havanacity_db_dev',
       synchronize: true,
       logging: ['query'],
     }),

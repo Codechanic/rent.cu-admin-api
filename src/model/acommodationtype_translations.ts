@@ -15,7 +15,7 @@ import {
 } from 'typeorm';
 import { AccommodationType } from './accommodationType';
 
-@Entity('acommodationtype_translations', { schema: 'havanacity_db' })
+@Entity('acommodationtype_translations', { schema: 'havanacity_db_dev' })
 @Index('lookup_unique_idx', ['locale', 'object', 'field'], { unique: true })
 @Index('IDX_EF67AC90232D562B', ['object'])
 export class AccommodationTypeTranslations {

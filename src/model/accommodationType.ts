@@ -16,7 +16,7 @@ import {
 import { AccommodationTypeTranslations } from './acommodationtype_translations';
 import { HomeStay } from './homestay';
 
-@Entity('acommodationtype', { schema: 'havanacity_db' })
+@Entity('acommodationtype', { schema: 'havanacity_db_dev' })
 @Index('UNIQ_198CAD195E237E06', ['name'], { unique: true })
 export class AccommodationType {
 

@@ -15,7 +15,7 @@ import {
 } from 'typeorm';
 import { Season } from './season';
 
-@Entity('season_range', { schema: 'havanacity_db' })
+@Entity('season_range', { schema: 'havanacity_db_dev' })
 @Index('IDX_84B6AD964EC001D1', ['season'])
 export class SeasonRange {
 

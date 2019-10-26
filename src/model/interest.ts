@@ -16,7 +16,7 @@ import {
 import { InterestTranslations } from './interest_translations';
 import { HomeStay } from './homestay';
 
-@Entity('interest', { schema: 'havanacity_db' })
+@Entity('interest', { schema: 'havanacity_db_dev' })
 @Index('UNIQ_6C3E1A675E237E06', ['name'], { unique: true })
 export class Interest {
 
