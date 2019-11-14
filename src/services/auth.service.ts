@@ -32,7 +32,7 @@ export class AuthService {
     const user = await this.usersService.findOne(username);
     /* if there is one, return it, otherwise, return null*/
     if (user /*&& user.password === pass*/) {
-      return { username: user.username, id: user.id };
+      return { username: user.username, id: user.id, password: pass };
     }
     return null;
   }
@@ -47,7 +47,6 @@ export class AuthService {
     const payload = { username: user.username, sub: user.id };
     return {
       access_token: this.jwtService.sign(payload),
-      resume: CryptoJS.SHA512(user.username).toString(),
     };
   }
 

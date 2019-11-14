@@ -67,45 +67,6 @@ export class User {
   })
   enabled: boolean;
 
-  @Column('varchar', {
-    nullable: false,
-    length: 180,
-    name: 'username_canonical',
-  })
-  usernameCanonical: string;
-
-  @Column('varchar', {
-    nullable: false,
-    length: 180,
-    name: 'email_canonical',
-  })
-  emailCanonical: string;
-
-  @Column('datetime', {
-    nullable: true,
-    name: 'last_login',
-  })
-  lastLogin: Date | null;
-
-  @Column('varchar', {
-    nullable: true,
-    length: 180,
-    name: 'confirmation_token',
-  })
-  confirmationToken: string | null;
-
-  @Column('datetime', {
-    nullable: true,
-    name: 'password_requested_at',
-  })
-  passwordRequestedAt: Date | null;
-
-  @Column('longtext', {
-    nullable: false,
-    name: 'roles',
-  })
-  roles: string;
-
   @ManyToMany(() => AcmeRole, (acmeRole: AcmeRole) => acmeRole.users, { nullable: false })
   @JoinTable({ name: 'user_role' })
   acmeRoles: AcmeRole[];

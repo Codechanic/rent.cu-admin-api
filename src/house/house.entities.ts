@@ -24,6 +24,8 @@ import { RCUPromoTranslations } from '../model/rcu_promo_translations';
 import { Season } from '../model/season';
 import { SeasonRange } from '../model/season_range';
 import { AccommodationTypeTranslations } from '../model/acommodationtype_translations';
+import { CommentVisitors} from '../model/commentvisitors';
+import { CommentVisitorsTranslations } from '../model/commentvisitors_translations';
 
 const entities = [
   HomeStay,
@@ -32,6 +34,8 @@ const entities = [
   HomeStayPrice,
   Comment,
   CommentTranslations,
+  CommentVisitors,
+  CommentVisitorsTranslations,
   AccommodationType,
   AccommodationTypeTranslations,
   ExtraCost,
