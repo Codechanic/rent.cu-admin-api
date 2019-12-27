@@ -14,6 +14,7 @@ export class HouseController {
   /**
    * Controller constructor
    * @param houseService Instance of HouseService
+   * @param mailerService Instance of MailerService
    */
   constructor(private readonly houseService: HouseService, private readonly mailerService: MailerService) {
   }
@@ -32,9 +33,9 @@ export class HouseController {
   }
 
   @UseGuards(AuthGuard('jwt'))
-  @Get(':id/detail')
-  async findOneById(@Param('id') id): Promise<any> {
-    return this.houseService.find(id);
+  @Get(':id')
+  async findById(@Param('id') id): Promise<HomeStay> {
+    return this.houseService.findById(id);
   }
 
   @Get('/owner/:id')
