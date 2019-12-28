@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { DeleteResult, Repository, UpdateResult } from 'typeorm';
+import { Injectable } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { DeleteResult, Repository, UpdateResult } from "typeorm";
 
-import { Comment } from '../model/comment';
+import { Comment } from "../model/comment";
 
 @Injectable()
 export class CommentService {
@@ -29,11 +29,14 @@ export class CommentService {
   }
 
   /**
-   * Custom comment query
-   * @param options
+   * Find comments by house
+   * @param houseId
    */
-  async findBy(options): Promise<Comment[]> {
-    return this.commentRepository.find(options);
+  async findByHouse(houseId): Promise<Comment[]> {
+    return this.commentRepository.find({
+      where: { homestay: houseId },
+      select: ["id", "name", "nick", "text", "rating"]
+    });
   }
 
   /**

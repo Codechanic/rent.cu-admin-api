@@ -30,11 +30,11 @@ export class HouseService {
   }
 
   /**
-   * Find houses by their owner
-   * @param ownerId Id of the owner
+   * Find houses by their owner-card
+   * @param ownerId Id of the owner-card
    */
   async findByOwner(ownerId): Promise<HomeStay[]> {
-    return await this.houseRepository.find({ ownerId });
+    return await this.houseRepository.find({ order: { name: "ASC" }, where: { ownerId} });
   }
 
   /**
@@ -67,7 +67,7 @@ export class HouseService {
    * @param id House's id
    */
   async findById(id: any): Promise<HomeStay> {
-    return await this.houseRepository.findOne({where: {id}});
+    return await this.houseRepository.findOne({ where: { id } });
   }
 
   /**
@@ -75,13 +75,13 @@ export class HouseService {
    * @param house House to modify
    */
   private setHouseDefaults(house: HomeStay) {
-    house.slug = house.name.replace(/\s/g, '-').toLowerCase();
+    house.slug = house.name.replace(/\s/g, "-").toLowerCase();
     house.promo = false;
     house.enabled = false;
     house.comision = 5;
     house.showcontact = false;
     house.rank = 0;
     house.showHome = false;
-    house.note = '';
+    house.note = "";
   }
 }

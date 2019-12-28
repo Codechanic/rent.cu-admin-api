@@ -23,6 +23,12 @@ export class CommentController {
   }
 
   @UseGuards(AuthGuard('jwt'))
+  @Get('house/:houseId')
+  async findByHouse(@Param('houseId') houseId): Promise<Comment[]> {
+    return this.commentService.findByHouse(houseId);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
   @Post()
   async create(@Body() comment: Comment): Promise<any> {
     return this.commentService.create(comment);
