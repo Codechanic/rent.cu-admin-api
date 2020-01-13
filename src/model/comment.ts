@@ -15,6 +15,7 @@ import {
 } from 'typeorm';
 import { HomeStay } from './homestay';
 import { CommentTranslations } from './comment_translations';
+import { Season } from "./season";
 
 @Entity('comment', { schema: 'havanacity_db_dev' })
 @Index('UNIQ_9474526C5E237E06', ['name'], { unique: true })
@@ -62,6 +63,12 @@ export class Comment {
     name: 'rating',
   })
   rating: number;
+
+  @Column('boolean', {
+    nullable: false,
+    name: 'enabled',
+  })
+  enabled: boolean;
 
   @OneToMany(() => CommentTranslations, (commentTranslations: CommentTranslations) => commentTranslations.object, {
     onDelete: 'CASCADE',

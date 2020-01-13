@@ -25,7 +25,7 @@ export class CommentService {
    * @param id
    */
   async find(id): Promise<Comment> {
-    return this.commentRepository.findOne(id);
+    return this.commentRepository.findOne(id, {relations: ['homestay']});
   }
 
   /**
@@ -35,7 +35,7 @@ export class CommentService {
   async findByHouse(houseId): Promise<Comment[]> {
     return this.commentRepository.find({
       where: { homestay: houseId },
-      select: ["id", "name", "nick", "text", "rating"]
+      select: ["id", "name", "nick", "text", "email", "rating", "enabled"]
     });
   }
 

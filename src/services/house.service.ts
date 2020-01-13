@@ -4,6 +4,8 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { DeleteResult, Repository, UpdateResult } from "typeorm";
 
 import { HomeStay } from "../model/homestay";
+import { FreeService } from "../model/homestay_freeservices";
+import { async } from "rxjs/internal/scheduler/async";
 
 /**
  * House handling service
@@ -13,11 +15,14 @@ export class HouseService {
 
   /**
    * Service constructor
-   * @param houseRepository Instance of TypeORM's repository service
+   * @param houseRepository Instance of TypeORM's repository service for HomeStay
+   * @param freeServiceRepository Instance of TypeORM's repository service for FreeService
    */
   constructor(
     @InjectRepository(HomeStay)
-    private readonly houseRepository: Repository<HomeStay>) {
+    private readonly houseRepository: Repository<HomeStay>,
+    @InjectRepository(FreeService)
+    private readonly freeServiceRepository: Repository<FreeService>) {
   }
 
   /**
@@ -30,11 +35,14 @@ export class HouseService {
   }
 
   /**
-   * Find houses by their owner-card
-   * @param ownerId Id of the owner-card
+   * Find houses by their owner
+   * @param ownerId Id of the owner
    */
   async findByOwner(ownerId): Promise<HomeStay[]> {
-    return await this.houseRepository.find({ order: { name: "ASC" }, where: { ownerId} });
+    return await this.houseRepository.find({
+      order: { name: "ASC" },
+      where: { ownerId }
+    });
   }
 
   /**
@@ -50,8 +58,14 @@ export class HouseService {
    * Update a house
    * @param house Modified house data
    */
-  async update(house: HomeStay): Promise<UpdateResult> {
-    return await this.houseRepository.update(house.id, house);
+  async update(house: HomeStay): Promise<HomeStay[]> {
+    const houseToUpdate = await this.houseRepository.manager.findOne(HomeStay, house.id);
+    for (const property in house) {
+      if (house.hasOwnProperty(property)) {
+        houseToUpdate[property] = house[property];
+      }
+    }
+    return await this.houseRepository.manager.save<HomeStay>([houseToUpdate]);
   }
 
   /**
@@ -67,7 +81,18 @@ export class HouseService {
    * @param id House's id
    */
   async findById(id: any): Promise<HomeStay> {
-    return await this.houseRepository.findOne({ where: { id } });
+    return await this.houseRepository.findOne(
+      {
+        where: { id },
+        relations: [
+          "municipality",
+          "accommodation",
+          "homestayFreeservices",
+          "homestayNotOffered",
+          "homestayExtracosts"
+        ]
+      }
+    );
   }
 
   /**

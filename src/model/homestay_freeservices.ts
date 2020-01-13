@@ -25,6 +25,6 @@ export class FreeService {
   })
   name: string;
 
-  @ManyToMany(() => HomeStay, (homeStay: HomeStay) => homeStay.homestayFreeservicess)
+  @ManyToMany(() => HomeStay, (homeStay: HomeStay) => homeStay.homestayFreeservices)
   homestays: HomeStay[];
 }

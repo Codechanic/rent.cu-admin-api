@@ -26,7 +26,7 @@ export class NotOffered {
   })
   name: string;
 
-  @ManyToMany(() => HomeStay, (homeStay: HomeStay) => homeStay.homestayNotoffereds)
+  @ManyToMany(() => HomeStay, (homeStay: HomeStay) => homeStay.homestayNotOffered)
   homestays: HomeStay[];
 
 }
