@@ -1,13 +1,13 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Injectable } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
 
-import { Province } from '../model/province';
-import { ProvinceTranslations } from '../model/province_translations';
-import { Municipality } from '../model/municipality';
-import { MunicipalityTranslations } from '../model/municipality_translations';
-import { LocationType } from '../model/location';
-import { Place } from '../model/place';
+import { Province } from "../model/province";
+import { ProvinceTranslations } from "../model/province_translations";
+import { Municipality } from "../model/municipality";
+import { MunicipalityTranslations } from "../model/municipality_translations";
+import { LocationType } from "../model/location";
+import { Place } from "../model/place";
 
 /**
  * Region handling service
@@ -35,7 +35,7 @@ export class RegionService {
     @InjectRepository(LocationType)
     private readonly locationRepository: Repository<LocationType>,
     @InjectRepository(Place)
-    private readonly placeRepository: Repository<Place>,
+    private readonly placeRepository: Repository<Place>
   ) {
   }
 
@@ -53,12 +53,18 @@ export class RegionService {
     return await this.municipalityRepository.find();
   }
 
+  /**
+   * Find all locations
+   */
   async Location() {
     return await this.locationRepository.find();
   }
 
+  /**
+   * Find all places
+   */
   async Places() {
-    return await this.placeRepository.find();
+    return await this.placeRepository.find({ relations: ["municipality"] });
   }
 
 }

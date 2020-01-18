@@ -14,6 +14,7 @@ import {
   RelationId,
 } from 'typeorm';
 import { HomeStay } from './homestay';
+import { Municipality } from "./municipality";
 
 @Entity('place', { schema: 'havanacity_db_dev' })
 export class Place {
@@ -92,6 +93,13 @@ export class Place {
     name: 'phones',
   })
   phones: string | null;
+
+  @ManyToOne(() => Municipality, null, {
+    onDelete: "RESTRICT",
+    onUpdate: "RESTRICT"
+  })
+  @JoinColumn({ name: "municipality_id" })
+  municipality: Municipality | null;
 
   @ManyToMany(() => HomeStay, (homeStay: HomeStay) => homeStay.places)
   homestays: HomeStay[];
