@@ -29,7 +29,17 @@ export class HomeStayChain {
   homestays: HomeStay[];
 
   @ManyToMany(() => Season, (season: Season) => season.homestayChains, { nullable: false })
-  @JoinTable({ name: 'homestay_chain_season' })
+  @JoinTable({
+    name: 'homestay_chain_season',
+    joinColumn: {
+      name: 'homestaychain_id',
+      referencedColumnName: 'id',
+    },
+    inverseJoinColumn: {
+      name: 'season_id',
+      referencedColumnName: 'id',
+    },
+  })
   seasons: Season[];
 
 }

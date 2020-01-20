@@ -47,7 +47,8 @@ export class AccommodationType {
     })
   acommodationtypeTranslationss: AccommodationTypeTranslations[];
 
-  @OneToMany(() => HomeStay, (homeStay: HomeStay) => homeStay.accommodation, { onDelete: 'SET NULL', onUpdate: 'RESTRICT' })
+  @OneToMany(() => HomeStay, (homeStay: HomeStay) => homeStay.accommodation, {
+    onDelete: 'SET NULL', onUpdate: 'RESTRICT' })
   homestays: HomeStay[];
 
 }

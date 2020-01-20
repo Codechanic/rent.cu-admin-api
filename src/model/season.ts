@@ -35,10 +35,12 @@ export class Season {
   })
   name: string;
 
-  @OneToMany(() => HomeStayPrice, (homeStayPrice: HomeStayPrice) => homeStayPrice.season, { onDelete: 'RESTRICT', onUpdate: 'RESTRICT' })
+  @OneToMany(() => HomeStayPrice, (homeStayPrice: HomeStayPrice) => homeStayPrice.season, {
+    onDelete: 'RESTRICT', onUpdate: 'RESTRICT' })
   homestayPrices: HomeStayPrice[];
 
-  @OneToMany(() => SeasonRange, (seasonRange: SeasonRange) => seasonRange.season, { onDelete: 'RESTRICT', onUpdate: 'RESTRICT' })
+  @OneToMany(() => SeasonRange, (seasonRange: SeasonRange) => seasonRange.season, {
+    onDelete: 'RESTRICT', onUpdate: 'RESTRICT' })
   seasonRanges: SeasonRange[];
 
   @ManyToMany(() => HomeStayChain, (homeStayChain: HomeStayChain) => homeStayChain.seasons)

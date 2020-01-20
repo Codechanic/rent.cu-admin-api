@@ -56,7 +56,7 @@ export class HouseController {
           .sendMail({
             // @ts-ignore
             to: user.username,
-            from: 'noreply@nestjs.com',
+            from: 'booking@rent.cu',
             subject: 'Usted ha creado una casa  ✔',
             text: 'Usted ha creado una casa',
             html: '<b>Usted ha creado una casa</b>',
@@ -76,7 +76,19 @@ export class HouseController {
   @UseGuards(AuthGuard('jwt'))
   @Put(':id/update')
   async update(@Param('id') id, @Body() house: HomeStay): Promise<any> {
-    return this.houseService.update(house);
+    return this.houseService.update(house)
+      .then((response: any) => {
+        this
+          .mailerService
+          .sendMail({
+            to: 'booking@rent.cu',
+            from: 'booking@rent.cu',
+            subject: 'Se ha actualizado la casa  ✔',
+            text: 'Se ha actualizado la casa',
+            html: '<b>Se ha actualizado la casa</b>',
+          });
+      })
+      ;
   }
 
   @UseGuards(AuthGuard('jwt'))

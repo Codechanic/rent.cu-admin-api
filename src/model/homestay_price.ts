@@ -31,7 +31,8 @@ export class HomeStayPrice {
   @JoinColumn({ name: 'season_id' })
   season: Season | null;
 
-  @ManyToOne(() => HomeStay, (homeStay: HomeStay) => homeStay.homestayPrices, { onDelete: 'RESTRICT', onUpdate: 'RESTRICT' })
+  @ManyToOne(() => HomeStay, (homeStay: HomeStay) => homeStay.homestayPrices,
+  { onDelete: 'RESTRICT', onUpdate: 'RESTRICT' })
   @JoinColumn({ name: 'homestay_id' })
   homestay: HomeStay | null;
 

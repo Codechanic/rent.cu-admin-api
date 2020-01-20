@@ -16,6 +16,12 @@ import { Place } from '../model/place';
 import { ExtraOptionService } from '../services/extra.option.service';
 import { NotOffered } from '../model/homestay_notoffered';
 import { ExtraCost } from '../model/homestay_extracost';
+import { HomeStayChain } from '../model/homestay_chain';
+import { Season } from '../model/season';
+import { SeasonPriceService } from '../services/season.price.service';
+import { SeasonRange } from '../model/season_range';
+import { HomeStayPrice } from '../model/homestay_price';
+import { HomeStay } from '../model/homestay';
 
 @Module({
   controllers: [FormDataController],
@@ -32,9 +38,14 @@ import { ExtraCost } from '../model/homestay_extracost';
       Place,
       NotOffered,
       ExtraCost,
+      HomeStayChain,
+      HomeStay,
+      Season,
+      SeasonRange,
+      HomeStayPrice,
     ])],
-  providers: [RegionService, AccommodationTypeService, FreeServiceService, ExtraOptionService],
-  exports: [RegionService, AccommodationTypeService, FreeServiceService, ExtraOptionService],
+  providers: [RegionService, AccommodationTypeService, FreeServiceService, ExtraOptionService, SeasonPriceService],
+  exports: [RegionService, AccommodationTypeService, FreeServiceService, ExtraOptionService, SeasonPriceService],
 })
 export class FormModule {
 }

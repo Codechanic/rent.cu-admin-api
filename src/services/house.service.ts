@@ -1,11 +1,11 @@
-import { Injectable } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 
-import { DeleteResult, Repository, UpdateResult } from "typeorm";
+import { DeleteResult, Repository, UpdateResult } from 'typeorm';
 
-import { HomeStay } from "../model/homestay";
-import { FreeService } from "../model/homestay_freeservices";
-import { async } from "rxjs/internal/scheduler/async";
+import { HomeStay } from '../model/homestay';
+import { FreeService } from '../model/homestay_freeservices';
+import { async } from 'rxjs/internal/scheduler/async';
 
 /**
  * House handling service
@@ -40,8 +40,8 @@ export class HouseService {
    */
   async findByOwner(ownerId): Promise<HomeStay[]> {
     return await this.houseRepository.find({
-      order: { name: "ASC" },
-      where: { ownerId }
+      order: { name: 'ASC' },
+      where: { ownerId },
     });
   }
 
@@ -85,13 +85,13 @@ export class HouseService {
       {
         where: { id },
         relations: [
-          "municipality",
-          "accommodation",
-          "homestayFreeservices",
-          "homestayNotOffered",
-          "homestayExtracosts"
-        ]
-      }
+          'municipality',
+          'accommodation',
+          'homestayFreeservices',
+          'homestayNotOffered',
+          'homestayExtracosts',
+        ],
+      },
     );
   }
 
@@ -100,13 +100,13 @@ export class HouseService {
    * @param house House to modify
    */
   private setHouseDefaults(house: HomeStay) {
-    house.slug = house.name.replace(/\s/g, "-").toLowerCase();
+    house.slug = house.name.replace(/\s/g, '-').toLowerCase();
     house.promo = false;
     house.enabled = false;
     house.comision = 5;
     house.showcontact = false;
     house.rank = 0;
     house.showHome = false;
-    house.note = "";
+    house.note = '';
   }
 }

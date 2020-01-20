@@ -1,7 +1,7 @@
-import { NestFactory } from "@nestjs/core";
-import { SwaggerModule, DocumentBuilder } from "@nestjs/swagger";
+import { NestFactory } from '@nestjs/core';
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
-import { AppModule } from "./app.module";
+import { AppModule } from './app.module';
 
 /**
  * Bootstrapping of the NestJS application
@@ -13,12 +13,12 @@ async function bootstrap() {
 
   /* setup swagger api documentation */
   const options = new DocumentBuilder()
-    .setTitle("RENT.CU API DOC")
-    .setDescription("Documentation for the rent.cu api")
-    .setVersion("1.0")
+    .setTitle('RENT.CU API DOC')
+    .setDescription('Documentation for the rent.cu api')
+    .setVersion('1.0')
     .build();
   const document = SwaggerModule.createDocument(app, options);
-  SwaggerModule.setup("api", app, document);
+  SwaggerModule.setup('api', app, document);
 
   /* enable communication between different domains */
   app.enableCors();
@@ -27,4 +27,4 @@ async function bootstrap() {
   await app.listen(3000);
 }
 
-bootstrap().then(() => console.log("Server started.")).catch((error) => console.log(error));
+bootstrap().then(() => console.log('Server started.')).catch((error) => console.log(error));

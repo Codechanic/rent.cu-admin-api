@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Logger, Param, Post, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Logger, Param, Post, Put, UseGuards, Req } from '@nestjs/common';
 import { RegionService } from '../services/region.service';
 import { Province } from '../model/province';
 import { Municipality } from '../model/municipality';
@@ -11,6 +11,10 @@ import { Place } from '../model/place';
 import { ExtraOptionService } from '../services/extra.option.service';
 import { NotOffered } from '../model/homestay_notoffered';
 import { ExtraCost } from '../model/homestay_extracost';
+import { SeasonPriceService } from '../services/season.price.service';
+import { HomeStay } from '../model/homestay';
+import { AuthGuard } from '@nestjs/passport';
+import { log } from 'util';
 
 /**
  * Form data controller api, for filling dropdowns on house forms
@@ -22,11 +26,13 @@ export class FormDataController {
    * @param regionService Instance of RegionService
    * @param accommodationTypeService Instance of AccommodationTypeService
    * @param extraOptionService Instance of AccommodationTypeService
+   * @param seasonPriceService Instance of SeasonPriceService
    */
   constructor(
     private regionService: RegionService,
     private accommodationTypeService: AccommodationTypeService,
     private extraOptionService: ExtraOptionService,
+    private seasonPriceService: SeasonPriceService,
   ) {
   }
 
@@ -83,5 +89,24 @@ export class FormDataController {
   @Get('/extracost')
   async ExtraCost(): Promise<ExtraCost[]> {
     return this.extraOptionService.ExtraCost();
+  }
+
+  // @UseGuards(AuthGuard('jwt'))
+  @Get('/seasons/:id')
+  async Season(@Param('id') id, @Body() house: HomeStay): Promise<any> {
+    return this.seasonPriceService.getSeasonPriceHome(id);
+  }
+
+  @Post('/season/update')
+  async SeasonUpdate(@Body('homeStayId') homeStayId,
+                     @Body('seasonId') seasonId,
+                     @Body('price') price,
+  ): Promise<any> {
+    return this.seasonPriceService.setSeasonPrice(homeStayId, seasonId, price);
+  }
+
+  @Post('/season/create')
+  async SeasonCreate(@Body('homeStayId') homeStayId, @Body('config') config): Promise<any> {
+    return this.seasonPriceService.createSpecialSeason(homeStayId, config);
   }
 }
