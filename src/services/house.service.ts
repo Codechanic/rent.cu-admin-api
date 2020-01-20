@@ -90,6 +90,7 @@ export class HouseService {
           'homestayFreeservices',
           'homestayNotOffered',
           'homestayExtracosts',
+          'places',
         ],
       },
     );

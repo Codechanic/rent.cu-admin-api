@@ -322,7 +322,17 @@ export class HomeStay {
   homestayNotOffered: NotOffered[];
 
   @ManyToMany(() => Place, (place: Place) => place.homestays, { nullable: false })
-  @JoinTable({ name: 'homestays_places' })
+  @JoinTable({
+    name: 'homestays_places',
+    joinColumn: {
+      name: 'homestay_id',
+      referencedColumnName: 'id',
+    },
+    inverseJoinColumn: {
+      name: 'place_id',
+      referencedColumnName: 'id',
+    },
+  })
   places: Place[];
 
   @ManyToMany(() => MailingHomeStay, (mailingHomeStay: MailingHomeStay) => mailingHomeStay.homestays)
