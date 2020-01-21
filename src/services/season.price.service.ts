@@ -114,6 +114,12 @@ export class SeasonPriceService {
     }
   }
 
+/**
+ * Given a season, homestay, price updates this values
+ * @param homeStayId
+ * @param seasonId
+ * @param price
+ */
   async setSeasonPrice(homeStayId: number, seasonId: number, price: number) {
     const homeStay = await this.houseRepository.findOne({ where: { id: homeStayId} });
     const season = await this.seasonRepository.findOne({ where: { id: seasonId} });
@@ -135,6 +141,11 @@ export class SeasonPriceService {
     throw new BadRequestException('Invalid Params');
   }
 
+  /**
+   * Create special season for homestay
+   * @param homeStayId
+   * @param config
+   */
   async createSpecialSeason(homeStayId: number, config: any) {
     if (homeStayId !== null) {
       const homeStay = await this.houseRepository
@@ -165,6 +176,38 @@ export class SeasonPriceService {
           return await this.houseRepository.manager.save(homeStay);
         }
       }
+    }
+    return false;
+  }
+
+  async updateSpecialSeason(seasonId, config) {
+    if (seasonId !== null) {
+     const season = await this.seasonRepository.findOneOrFail({
+        where: { id: seasonId },
+        relations : [
+          'seasonRanges',
+        ],
+      });
+     if (config.hasOwnProperty('name')) {
+        if (config.name !== season.name) {
+          season.name = config.name;
+          this.seasonRepository.manager.save(season);
+          if (config.hasOwnProperty('ranges')) {
+            const rangesId = season.seasonRanges.map(sr => sr.id);
+            await this.seasonRangeRepository.delete(rangesId);
+            config.ranges.forEach( async r => {
+              let seasonRange = new SeasonRange();
+              seasonRange.start = r.start;
+              seasonRange.end = r.end;
+              seasonRange.season = season;
+              seasonRange = await this.seasonRangeRepository.manager.save(seasonRange);
+            });
+          }
+
+        }
+      }
+
+     return season;
     }
     return false;
   }

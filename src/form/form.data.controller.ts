@@ -15,6 +15,7 @@ import { SeasonPriceService } from '../services/season.price.service';
 import { HomeStay } from '../model/homestay';
 import { AuthGuard } from '@nestjs/passport';
 import { log } from 'util';
+import { config } from 'rxjs';
 
 /**
  * Form data controller api, for filling dropdowns on house forms
@@ -91,12 +92,13 @@ export class FormDataController {
     return this.extraOptionService.ExtraCost();
   }
 
-  // @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'))
   @Get('/seasons/:id')
   async Season(@Param('id') id, @Body() house: HomeStay): Promise<any> {
     return this.seasonPriceService.getSeasonPriceHome(id);
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Post('/season/update')
   async SeasonUpdate(@Body('homeStayId') homeStayId,
                      @Body('seasonId') seasonId,
@@ -104,9 +106,14 @@ export class FormDataController {
   ): Promise<any> {
     return this.seasonPriceService.setSeasonPrice(homeStayId, seasonId, price);
   }
-
+  @UseGuards(AuthGuard('jwt'))
   @Post('/season/create')
-  async SeasonCreate(@Body('homeStayId') homeStayId, @Body('config') config): Promise<any> {
-    return this.seasonPriceService.createSpecialSeason(homeStayId, config);
+  async SeasonCreate(@Body('homeStayId') homeStayId, @Body('config') configSeason): Promise<any> {
+    return this.seasonPriceService.createSpecialSeason(homeStayId, configSeason);
+  }
+  @UseGuards(AuthGuard('jwt'))
+  @Post('/range/update')
+  async SeasonRangeUpdate(@Body('seasonId') seasonId, @Body('config') configSeason): Promise<any> {
+    return this.seasonPriceService.updateSpecialSeason(seasonId, configSeason);
   }
 }
