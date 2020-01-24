@@ -36,10 +36,19 @@ export class HouseService {
   /**
    * Find all houses
    */
-  async findAll(): Promise<HomeStay[]> {
+  async findAll(take, skip): Promise<HomeStay[]> {
 
     /* return all houses, including their relationship with Manager */
-    return await this.houseRepository.find();
+    if (take === undefined && skip === undefined) {
+      return await this.houseRepository.find();
+    } else if (take === undefined && skip !== undefined) {
+      return await this.houseRepository.find({skip});
+    } else if (take !== undefined && skip === undefined) {
+      return await this.houseRepository.find({take});
+    } else {
+      return await this.houseRepository.find({take, skip});
+    }
+
   }
 
   /**

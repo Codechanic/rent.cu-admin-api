@@ -1,9 +1,10 @@
-import { Body, Controller, Delete, Get, Logger, Param, Post, Put, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Logger, Param, Post, Put, Query, Req, UseGuards } from '@nestjs/common';
 
 import { HouseService } from '../services/house.service';
 import { AuthGuard } from '@nestjs/passport';
 import { HomeStay } from '../model/homestay';
 import { MailerService } from '@nest-modules/mailer';
+import { log } from 'util';
 
 /**
  * House api endpoints
@@ -26,10 +27,12 @@ export class HouseController {
    */
   @UseGuards(AuthGuard('jwt'))
   @Get()
-  async findAll(): Promise<HomeStay[]> {
+  async findAll(@Query() query): Promise<HomeStay[]> {
 
     /* return all houses retrieved using house service */
-    return this.houseService.findAll();
+    log(query.take.toString());
+    log(query.skip.toString());
+    return this.houseService.findAll(query.take, query.skip);
   }
 
   @UseGuards(AuthGuard('jwt'))
