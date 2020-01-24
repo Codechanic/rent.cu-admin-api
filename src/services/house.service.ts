@@ -1,7 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { House } from '../model/house.entity';
-import { DeleteResult, Repository, UpdateResult } from 'typeorm';
+
+import { DeleteResult, Repository, UpdateResult, In } from 'typeorm';
+
+import { HomeStay } from '../model/homestay';
+import { FreeService } from '../model/homestay_freeservices';
+import { async } from 'rxjs/internal/scheduler/async';
+import { Season } from '../model/season';
+import { HomeStayPrice } from '../model/homestay_price';
+import { HomeStayChain } from '../model/homestay_chain';
 
 /**
  * House handling service
@@ -11,47 +18,47 @@ export class HouseService {
 
   /**
    * Service constructor
-   * @param houseRepository Instance of TypeORM's repository service
+   * @param houseRepository Instance of TypeORM's repository service for HomeStay
+   * @param freeServiceRepository Instance of TypeORM's repository service for FreeService
    */
   constructor(
-    @InjectRepository(House)
-    private readonly houseRepository: Repository<House>) {
+    @InjectRepository(HomeStay)
+    private readonly houseRepository: Repository<HomeStay>,
+    @InjectRepository(FreeService)
+    private readonly freeServiceRepository: Repository<FreeService>,
+    @InjectRepository(Season)
+    private readonly seasonRepository: Repository<Season>,
+    @InjectRepository(HomeStayChain)
+    private readonly homeStayChainRepository: Repository<HomeStayChain>,
+    ) {
   }
 
   /**
    * Find all houses
    */
-  async findAll(): Promise<House[]> {
+  async findAll(): Promise<HomeStay[]> {
 
     /* return all houses, including their relationship with Manager */
-    return await this.houseRepository.find({ relations: ['manager'] });
+    return await this.houseRepository.find();
   }
 
   /**
-   * Find house by id
-   * @param id House id
+   * Find houses by their owner
+   * @param ownerId Id of the owner
    */
-  findById(id: string): Promise<House> {
-
-    /* return the house that matches with the id param, including its relationship with Manager */
-    return this.houseRepository.findOne({ where: { id }, relations: ['manager'] });
-  }
-
-  /**
-   * Find all houses by Manager id
-   * @param managerId Manager id
-   */
-  findByManagerId(managerId: string): Promise<House[]> {
-
-    /* return all houses that to the manager's id, including its relationship with Manager */
-    return this.houseRepository.find({ where: { manager: managerId }, relations: ['manager'] });
+  async findByOwner(ownerId): Promise<HomeStay[]> {
+    return await this.houseRepository.find({
+      order: { name: 'ASC' },
+      where: { ownerId },
+    });
   }
 
   /**
    * Create a house
    * @param house New house data
    */
-  async create(house: House): Promise<House> {
+  async create(house: HomeStay): Promise<HomeStay> {
+    this.setHouseDefaults(house);
     return await this.houseRepository.save(house);
   }
 
@@ -59,8 +66,14 @@ export class HouseService {
    * Update a house
    * @param house Modified house data
    */
-  async update(house: House): Promise<UpdateResult> {
-    return await this.houseRepository.update(house.id, house);
+  async update(house: HomeStay): Promise<HomeStay[]> {
+    const houseToUpdate = await this.houseRepository.manager.findOne(HomeStay, house.id);
+    for (const property in house) {
+      if (house.hasOwnProperty(property)) {
+        houseToUpdate[property] = house[property];
+      }
+    }
+    return await this.houseRepository.manager.save<HomeStay>([houseToUpdate]);
   }
 
   /**
@@ -69,5 +82,64 @@ export class HouseService {
    */
   async delete(id): Promise<DeleteResult> {
     return await this.houseRepository.delete(id);
+  }
+
+  /**
+   * Find a house by its id
+   * @param id House's id
+   */
+  async findById(id: any): Promise<any> {
+    const homestay =  await this.houseRepository.findOne(
+      {
+        where: { id },
+        relations: [
+          'municipality',
+          'accommodation',
+          'homestayFreeservices',
+          'homestayNotOffered',
+          'homestayExtracosts',
+          'places',
+          'seasons',
+          'chain',
+        ],
+      },
+    );
+
+    if (homestay.seasons.length === 0) {
+      let chain = homestay.chain;
+      chain = await this.homeStayChainRepository.findOne({
+        where: { id: chain.id },
+        relations: [
+          'seasons',
+        ],
+      });
+      let seasons = chain.seasons;
+      const seasonId = seasons.map(s => s.id);
+      seasons = await this.seasonRepository.find({
+        where: { id: In(seasonId) },
+        relations: [
+          'seasonRanges',
+          'homestayPrices',
+        ],
+      });
+      homestay.seasons = seasons;
+
+    }
+    return homestay;
+  }
+
+  /**
+   * Set default values for house properties
+   * @param house House to modify
+   */
+  private setHouseDefaults(house: HomeStay) {
+    house.slug = house.name.replace(/\s/g, '-').toLowerCase();
+    house.promo = false;
+    house.enabled = false;
+    house.comision = 5;
+    house.showcontact = false;
+    house.rank = 0;
+    house.showHome = false;
+    house.note = '';
   }
 }

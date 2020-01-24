@@ -4,12 +4,13 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { AppController } from './app.controller';
 import { AuthModule } from './auth/auth.module';
-import { HouseModule } from './house/house.module';
 import { UsersModule } from './users/users.module';
-import { ManagerModule } from './manager/manager.module';
-import { User } from './model/user.entity';
-import { House } from './model/house.entity';
-import { Manager } from './model/manager.entity';
+import { AcmeRole } from './model/acme_role';
+import { User } from './model/user';
+import { FormModule } from './form/form.module';
+import entities from './house/house.entities';
+import { HouseModule } from './house/house.module';
+import { HandlebarsAdapter, MailerModule } from '@nest-modules/mailer';
 
 /**
  * Main app module
@@ -19,19 +20,36 @@ import { Manager } from './model/manager.entity';
   imports: [
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: 'localhost',
+      host: '127.0.0.1',
       port: 3306,
-      username: 'root',
-      password: '',
-      database: 'standard-rent-system',
-      entities: [User, House, Manager],
+      username: 'havanacity_usr',
+      password: 'Bhs26t*1',
+      entities: [
+        User,
+        AcmeRole,
+        ...entities,
+      ],
+      database: 'havanacity_db_dev',
       synchronize: true,
       logging: ['query'],
     }),
-    HouseModule,
+    MailerModule.forRoot({
+      transport: 'smtp://localhost',
+      defaults: {
+        from: '"booking.rent.cu" <booking@rent.cu>',
+      },
+      template: {
+        dir: __dirname + '/templates',
+        adapter: new HandlebarsAdapter(),
+        options: {
+          strict: true,
+        },
+      },
+    }),
     AuthModule,
     UsersModule,
-    ManagerModule,
+    HouseModule,
+    FormModule,
   ],
   controllers: [AppController],
 })

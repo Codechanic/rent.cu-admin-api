@@ -1,7 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+
 import { Repository } from 'typeorm';
-import { User } from '../model/user.entity';
+
+import { User } from '../model/user';
 
 /**
  * User handling service
@@ -26,18 +28,26 @@ export class UsersService {
   }
 
   /**
-   * Find house by its username
+   * Find user by its username
    * @param username User's username
    */
   async findOne(username: string): Promise<User> {
-    return await this.userRepository.findOne({ where: {username}, relations: ['managerProfile'] });
+    return await this.userRepository.findOne({ where: { username }});
   }
 
   /**
-   * Create a house
+   * Create a user
    * @param user New user data
    */
   async create(user: User): Promise<User> {
     return await this.userRepository.save(user);
+  }
+
+  /**
+   * Find a user by its id
+   * @param id User's id
+   */
+  async findById(id: any): Promise<User> {
+    return await this.userRepository.findOne({where: {id}, select:['id', 'username', 'email', 'name']});
   }
 }

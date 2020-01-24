@@ -1,8 +1,9 @@
-import { Body, Controller, Delete, Get, Logger, Param, Post, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Logger, Param, Post, Put, Req, UseGuards } from '@nestjs/common';
 
 import { HouseService } from '../services/house.service';
-import { House } from '../model/house.entity';
 import { AuthGuard } from '@nestjs/passport';
+import { HomeStay } from '../model/homestay';
+import { MailerService } from '@nest-modules/mailer';
 
 /**
  * House api endpoints
@@ -13,8 +14,9 @@ export class HouseController {
   /**
    * Controller constructor
    * @param houseService Instance of HouseService
+   * @param mailerService Instance of MailerService
    */
-  constructor(private readonly houseService: HouseService) {
+  constructor(private readonly houseService: HouseService, private readonly mailerService: MailerService) {
   }
 
   /**
@@ -24,48 +26,69 @@ export class HouseController {
    */
   @UseGuards(AuthGuard('jwt'))
   @Get()
-  async findAll(): Promise<House[]> {
+  async findAll(): Promise<HomeStay[]> {
 
     /* return all houses retrieved using house service */
     return this.houseService.findAll();
   }
 
-  /**
-   * Api endpoint to retrieve a house by its id
-   * @description Endpoint is guarded by Passport's jwt strategy
-   * (call must be made with Authorization header)
-   */
   @UseGuards(AuthGuard('jwt'))
   @Get(':id')
-  async findById(@Param('id') id): Promise<House> {
-
-    /* return the house that matches the id param */
+  async findById(@Param('id') id): Promise<HomeStay> {
     return this.houseService.findById(id);
   }
 
-  /**
-   * Api endpoint to retrieve all houses by its manager's id
-   * @description Endpoint is guarded by Passport's jwt strategy
-   * (call must be made with Authorization header)
-   */
-  @UseGuards(AuthGuard('jwt'))
-  @Get('manager/:id')
-  async findByManagerId(@Param('id') managerId): Promise<House[]> {
-
-    /* return all houses that belong to the specified manager */
-    return this.houseService.findByManagerId(managerId);
+  @Get('/owner/:id')
+  async findByOwner(@Param('id') id): Promise<HomeStay[]> {
+    return this.houseService.findByOwner(id);
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Post('create')
-  async create(@Body() house: House) {
-    return this.houseService.create(house);
+  async create(@Body() house: HomeStay, @Req() request: any) {
+    return this.houseService
+      .create(house)
+      .then(() => {
+        // @ts-ignore
+        const user = request.user;
+        this
+          .mailerService
+          .sendMail({
+            // @ts-ignore
+            to: user.username,
+            from: 'booking@rent.cu',
+            subject: 'Usted ha creado una casa  ✔',
+            text: 'Usted ha creado una casa',
+            html: '<b>Usted ha creado una casa</b>',
+          });
+        this
+          .mailerService
+          .sendMail({
+            to: 'booking@rent.cu',
+            from: 'noreply@nestjs.com',
+            subject: 'Usted ha creado una casa  ✔',
+            text: 'Usted ha creado una casa',
+            html: '<b>Usted ha creado una casa</b>',
+          });
+      });
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Put(':id/update')
-  async update(@Param('id') id, @Body() house: House): Promise<any> {
-    return this.houseService.update(house);
+  async update(@Param('id') id, @Body() house: HomeStay): Promise<any> {
+    return this.houseService.update(house)
+      .then((response: any) => {
+        this
+          .mailerService
+          .sendMail({
+            to: 'booking@rent.cu',
+            from: 'booking@rent.cu',
+            subject: 'Se ha actualizado la casa  ✔',
+            text: 'Se ha actualizado la casa',
+            html: '<b>Se ha actualizado la casa</b>',
+          });
+      })
+      ;
   }
 
   @UseGuards(AuthGuard('jwt'))

@@ -4,8 +4,8 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { UsersService } from './users.service';
-import { User } from '../model/user.entity';
-import { House } from '../model/house.entity';
+import { User } from '../model/user';
+import { HomeStay } from '../model/homestay';
 
 describe('UsersService', () => {
     let service: UsersService;

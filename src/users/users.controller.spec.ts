@@ -3,7 +3,7 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 
 import { Repository } from 'typeorm';
 
-import { User } from '../model/user.entity';
+import { User } from '../model/user';
 import { UsersService } from '../services/users.service';
 import { UsersController } from './users.controller';
 
