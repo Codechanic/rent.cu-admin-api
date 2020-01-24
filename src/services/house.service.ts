@@ -1,11 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
-import { DeleteResult, Repository, UpdateResult } from 'typeorm';
+import { DeleteResult, Repository, UpdateResult, In } from 'typeorm';
 
 import { HomeStay } from '../model/homestay';
 import { FreeService } from '../model/homestay_freeservices';
 import { async } from 'rxjs/internal/scheduler/async';
+import { Season } from '../model/season';
+import { HomeStayPrice } from '../model/homestay_price';
+import { HomeStayChain } from '../model/homestay_chain';
 
 /**
  * House handling service
@@ -22,7 +25,12 @@ export class HouseService {
     @InjectRepository(HomeStay)
     private readonly houseRepository: Repository<HomeStay>,
     @InjectRepository(FreeService)
-    private readonly freeServiceRepository: Repository<FreeService>) {
+    private readonly freeServiceRepository: Repository<FreeService>,
+    @InjectRepository(Season)
+    private readonly seasonRepository: Repository<Season>,
+    @InjectRepository(HomeStayChain)
+    private readonly homeStayChainRepository: Repository<HomeStayChain>,
+    ) {
   }
 
   /**
@@ -80,8 +88,8 @@ export class HouseService {
    * Find a house by its id
    * @param id House's id
    */
-  async findById(id: any): Promise<HomeStay> {
-    return await this.houseRepository.findOne(
+  async findById(id: any): Promise<any> {
+    const homestay =  await this.houseRepository.findOne(
       {
         where: { id },
         relations: [
@@ -91,9 +99,33 @@ export class HouseService {
           'homestayNotOffered',
           'homestayExtracosts',
           'places',
+          'seasons',
+          'chain',
         ],
       },
     );
+
+    if (homestay.seasons.length === 0) {
+      let chain = homestay.chain;
+      chain = await this.homeStayChainRepository.findOne({
+        where: { id: chain.id },
+        relations: [
+          'seasons',
+        ],
+      });
+      let seasons = chain.seasons;
+      const seasonId = seasons.map(s => s.id);
+      seasons = await this.seasonRepository.find({
+        where: { id: In(seasonId) },
+        relations: [
+          'seasonRanges',
+          'homestayPrices',
+        ],
+      });
+      homestay.seasons = seasons;
+
+    }
+    return homestay;
   }
 
   /**
