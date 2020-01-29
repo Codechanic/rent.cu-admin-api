@@ -20,6 +20,8 @@ export class HouseService {
    * Service constructor
    * @param houseRepository Instance of TypeORM's repository service for HomeStay
    * @param freeServiceRepository Instance of TypeORM's repository service for FreeService
+   * @param seasonRepository
+   * @param homeStayChainRepository
    */
   constructor(
     @InjectRepository(HomeStay)
@@ -98,21 +100,23 @@ export class HouseService {
    * @param id House's id
    */
   async findById(id: any): Promise<any> {
-    const homestay =  await this.houseRepository.findOne(
-      {
-        where: { id },
-        relations: [
-          'municipality',
-          'accommodation',
-          'homestayFreeservices',
-          'homestayNotOffered',
-          'homestayExtracosts',
-          'places',
-          'seasons',
-          'chain',
-        ],
-      },
-    );
+
+    // it's necessary to use the query builder to retrieve the second level relationship of province
+    // homestay -> municipality -> province
+    const homestay = await this.houseRepository.createQueryBuilder('homestay')
+      .leftJoinAndSelect('homestay.municipality', 'municipality')
+      .leftJoinAndSelect('homestay.accommodation', 'accommodation')
+      .leftJoinAndSelect('homestay.homestayFreeservices', 'homestayFreeservices')
+      .leftJoinAndSelect('homestay.homestayNotOffered', 'homestayNotOffered')
+      .leftJoinAndSelect('homestay.homestayExtracosts', 'homestayExtracosts')
+      .leftJoinAndSelect('homestay.homestayPrices', 'homestayPrices')
+      .leftJoinAndSelect('homestay.places', 'places')
+      .leftJoinAndSelect('homestay.seasons', 'seasons')
+      .leftJoinAndSelect('homestay.chain', 'chain')
+      .leftJoinAndSelect('municipality.province', 'province')
+      .where('homestay.id = :homestayId')
+      .setParameter('homestayId', id)
+      .getOne();
 
     if (homestay.seasons.length === 0) {
       let chain = homestay.chain;

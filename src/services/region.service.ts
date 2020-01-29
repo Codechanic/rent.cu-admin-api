@@ -50,7 +50,7 @@ export class RegionService {
    * Find all municipalities
    */
   async Municipalities() {
-    return await this.municipalityRepository.find();
+    return await this.municipalityRepository.find({ relations: ["province"] });
   }
 
   /**
@@ -67,4 +67,20 @@ export class RegionService {
     return await this.placeRepository.find({ relations: ["municipality"] });
   }
 
+  /**
+   * Find al municipalities by province id
+   * @param provinceId Province id associated to the Municipality
+   */
+  async MunicipalitiesByProvince(provinceId: any) {
+    return await this.municipalityRepository.find({ where: { province: provinceId } });
+  }
+
+  /**
+   * Find a municipality by it's id
+   * @param municipalityId Id of the municipality to retrieve
+   * @constructor
+   */
+  async MunicipalityById(municipalityId: any) {
+    return await this.municipalityRepository.findOne({ where: { id: municipalityId } });
+  }
 }
