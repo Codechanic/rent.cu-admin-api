@@ -34,4 +34,11 @@ export class AppController {
   async login(@Req() request) {
     return this.authService.login(request.user);
   }
+
+  @UseGuards(AuthGuard('local'))
+  @Post('refresh')
+  async refreshToken(@Req() request) {
+    const token = request.token;
+
+  }
 }

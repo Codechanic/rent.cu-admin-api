@@ -63,4 +63,9 @@ export class AuthService {
     const registeredUser = await this.usersService.create(user);
     return await this.login({ ...registeredUser });
   }
+
+  async generateToken(token: string) {
+    const user = this.usersService.findByToken(token);
+    return user;
+  }
 }
