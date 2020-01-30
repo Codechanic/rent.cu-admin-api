@@ -109,35 +109,17 @@ export class HouseService {
       .leftJoinAndSelect('homestay.homestayFreeservices', 'homestayFreeservices')
       .leftJoinAndSelect('homestay.homestayNotOffered', 'homestayNotOffered')
       .leftJoinAndSelect('homestay.homestayExtracosts', 'homestayExtracosts')
-      .leftJoinAndSelect('homestay.homestayPrices', 'homestayPrices')
       .leftJoinAndSelect('homestay.places', 'places')
-      .leftJoinAndSelect('homestay.seasons', 'seasons')
-      .leftJoinAndSelect('homestay.chain', 'chain')
       .leftJoinAndSelect('municipality.province', 'province')
+      // season and prices
+      .leftJoinAndSelect('homestay.homestayPrices', 'homestayPrices')
+      .innerJoinAndSelect('homestayPrices.season', 'season')
+      .innerJoinAndSelect('season.seasonRanges', 'seasonRanges')
+      .leftJoinAndSelect('homestay.chain', 'chain')
+      .leftJoinAndSelect('chain.seasons', 'default_seasons')
       .where('homestay.id = :homestayId')
       .setParameter('homestayId', id)
       .getOne();
-
-    if (homestay.seasons.length === 0) {
-      let chain = homestay.chain;
-      chain = await this.homeStayChainRepository.findOne({
-        where: { id: chain.id },
-        relations: [
-          'seasons',
-        ],
-      });
-      let seasons = chain.seasons;
-      const seasonId = seasons.map(s => s.id);
-      seasons = await this.seasonRepository.find({
-        where: { id: In(seasonId) },
-        relations: [
-          'seasonRanges',
-          'homestayPrices',
-        ],
-      });
-      homestay.seasons = seasons;
-
-    }
     return homestay;
   }
 
