@@ -28,11 +28,23 @@ export class HouseController {
   @UseGuards(AuthGuard("jwt"))
   @Get()
   async findAll(@Query() query): Promise<HomeStay[]> {
+    log(query);
 
     /* return all houses retrieved using house service */
-    log(query.take.toString());
-    log(query.skip.toString());
+    // log(query.take.toString());
+    // log(query.skip.toString());
     return this.houseService.findAll(query.take, query.skip);
+  }
+
+  /**
+   * Api endpoint to count all houses
+   * @description Endpoint is guarded by Passport's jwt strategy
+   * (call must be made with Authorization header)
+   */
+  @UseGuards(AuthGuard("jwt"))
+  @Get("/count")
+  async countAll(): Promise<number> {
+    return this.houseService.count();
   }
 
   @UseGuards(AuthGuard("jwt"))
