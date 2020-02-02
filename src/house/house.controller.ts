@@ -40,15 +40,12 @@ export class HouseController {
    * @description Endpoint is guarded by Passport's jwt strategy
    * (call must be made with Authorization header)
    */
-  @UseGuards(AuthGuard("jwt"))
-  @Get("/count")
+  @UseGuards(AuthGuard('jwt'))
+  @Get('/count')
   async countAll(): Promise<number> {
     return this.houseService.count();
   }
 
-  @UseGuards(AuthGuard("jwt"))
-  @Get(":id")
-  async findById(@Param("id") id): Promise<HomeStay> {
   @UseGuards(AuthGuard('jwt'))
   @Get(':id')
   async findById(@Param('id') id): Promise<HomeStay> {
@@ -63,7 +60,7 @@ export class HouseController {
 
   @UseGuards(AuthGuard('jwt'))
   @Post('create')
-  async create(@Body() house: HomeStay, @Req() request: any) {
+  async create(@Body() house: HomeStay, @Req() request): Promise<any> {
     return this.houseService
       .create(house)
       .then(() => {
