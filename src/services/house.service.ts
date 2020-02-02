@@ -1,14 +1,14 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
+import { Injectable } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
 
-import { DeleteResult, Repository, UpdateResult, In } from 'typeorm';
+import { DeleteResult, Repository, UpdateResult, In } from "typeorm";
 
-import { HomeStay } from '../model/homestay';
-import { FreeService } from '../model/homestay_freeservices';
-import { async } from 'rxjs/internal/scheduler/async';
-import { Season } from '../model/season';
-import { HomeStayPrice } from '../model/homestay_price';
-import { HomeStayChain } from '../model/homestay_chain';
+import { HomeStay } from "../model/homestay";
+import { FreeService } from "../model/homestay_freeservices";
+import { async } from "rxjs/internal/scheduler/async";
+import { Season } from "../model/season";
+import { HomeStayPrice } from "../model/homestay_price";
+import { HomeStayChain } from "../model/homestay_chain";
 
 /**
  * House handling service
@@ -44,11 +44,11 @@ export class HouseService {
     if (take === undefined && skip === undefined) {
       return await this.houseRepository.find();
     } else if (take === undefined && skip !== undefined) {
-      return await this.houseRepository.find({skip});
+      return await this.houseRepository.find({ skip });
     } else if (take !== undefined && skip === undefined) {
-      return await this.houseRepository.find({take});
+      return await this.houseRepository.find({ take });
     } else {
-      return await this.houseRepository.find({take, skip});
+      return await this.houseRepository.find({ take, skip });
     }
 
   }
@@ -124,17 +124,24 @@ export class HouseService {
   }
 
   /**
+   * Count houses
+   */
+  count() {
+    return this.houseRepository.count();
+  }
+
+  /**
    * Set default values for house properties
    * @param house House to modify
    */
   private setHouseDefaults(house: HomeStay) {
-    house.slug = house.name.replace(/\s/g, '-').toLowerCase();
+    house.slug = house.name.replace(/\s/g, "-").toLowerCase();
     house.promo = false;
     house.enabled = false;
     house.comision = 5;
     house.showcontact = false;
     house.rank = 0;
     house.showHome = false;
-    house.note = '';
+    house.note = "";
   }
 }
