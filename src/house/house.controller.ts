@@ -54,7 +54,7 @@ export class HouseController {
 
   @UseGuards(AuthGuard('jwt'))
   @Get('/owner/:id')
-  async findByOwner(@Param('id') id, @Query() query): Promise<HomeStay[]> {
+  async findByOwner(@Param('id') id, @Query() query): Promise<{ data: HomeStay[], count: number }> {
     return this.houseService.findByOwner(id, query.skip, query.take);
   }
 
