@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Logger, Param, Post, Put, Req, UseGuards } from '@nestjs/common';
+import {Body, Controller, Delete, Get, Logger, Param, Post, Put, Query, Req, UseGuards} from '@nestjs/common';
 
 import { AuthGuard } from '@nestjs/passport';
 import { CommentService } from '../services/comment.service';
@@ -23,9 +23,15 @@ export class CommentController {
   }
 
   @UseGuards(AuthGuard('jwt'))
+  @Get('/count')
+  async count(): Promise<any> {
+    return this.commentService.count();
+  }
+
+  @UseGuards(AuthGuard('jwt'))
   @Get('house/:houseId')
-  async findByHouse(@Param('houseId') houseId): Promise<Comment[]> {
-    return this.commentService.findByHouse(houseId);
+  async findByHouse(@Param('houseId') houseId, @Query() query): Promise<Comment[]> {
+    return this.commentService.findByHouse(houseId, query.take, query.skip);
   }
 
   @UseGuards(AuthGuard('jwt'))

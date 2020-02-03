@@ -1,15 +1,15 @@
-import { Body, Controller, Delete, Get, Logger, Param, Post, Put, Query, Req, UseGuards } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Logger, Param, Post, Put, Query, Req, UseGuards } from '@nestjs/common';
 
-import { HouseService } from "../services/house.service";
-import { AuthGuard } from "@nestjs/passport";
-import { HomeStay } from "../model/homestay";
-import { MailerService } from "@nest-modules/mailer";
-import { log } from "util";
+import { HouseService } from '../services/house.service';
+import { AuthGuard } from '@nestjs/passport';
+import { HomeStay } from '../model/homestay';
+import { MailerService } from '@nest-modules/mailer';
+import { log } from 'util';
 
 /**
  * House api endpoints
  */
-@Controller("house")
+@Controller('house')
 export class HouseController {
 
   /**
@@ -25,14 +25,10 @@ export class HouseController {
    * @description Endpoint is guarded by Passport's jwt strategy
    * (call must be made with Authorization header)
    */
-  @UseGuards(AuthGuard("jwt"))
+  @UseGuards(AuthGuard('jwt'))
   @Get()
   async findAll(@Query() query): Promise<HomeStay[]> {
     log(query);
-
-    /* return all houses retrieved using house service */
-    // log(query.take.toString());
-    // log(query.skip.toString());
     return this.houseService.findAll(query.take, query.skip);
   }
 
@@ -41,26 +37,26 @@ export class HouseController {
    * @description Endpoint is guarded by Passport's jwt strategy
    * (call must be made with Authorization header)
    */
-  @UseGuards(AuthGuard("jwt"))
-  @Get("/count")
+  @UseGuards(AuthGuard('jwt'))
+  @Get('/count')
   async countAll(): Promise<number> {
     return this.houseService.count();
   }
 
-  @UseGuards(AuthGuard("jwt"))
-  @Get(":id")
-  async findById(@Param("id") id): Promise<HomeStay> {
+  @UseGuards(AuthGuard('jwt'))
+  @Get(':id')
+  async findById(@Param('id') id): Promise<HomeStay> {
     return this.houseService.findById(id);
   }
 
-  @UseGuards(AuthGuard("jwt"))
-  @Get("/owner/:id")
-  async findByOwner(@Param("id") id): Promise<HomeStay[]> {
-    return this.houseService.findByOwner(id);
+  @UseGuards(AuthGuard('jwt'))
+  @Get('/owner/:id')
+  async findByOwner(@Param('id') id, @Query() query): Promise<HomeStay[]> {
+    return this.houseService.findByOwner(id, query.skip, query.take);
   }
 
-  @UseGuards(AuthGuard("jwt"))
-  @Post("create")
+  @UseGuards(AuthGuard('jwt'))
+  @Post('create')
   async create(@Body() house: HomeStay, @Req() request: any) {
     return this.houseService
       .create(house)
@@ -72,42 +68,42 @@ export class HouseController {
           .sendMail({
             // @ts-ignore
             to: user.username,
-            from: "booking@rent.cu",
-            subject: "Usted ha creado una casa  ✔",
-            text: "Usted ha creado una casa",
-            html: "<b>Usted ha creado una casa</b>"
+            from: 'booking@rent.cu',
+            subject: 'Usted ha creado una casa  ✔',
+            text: 'Usted ha creado una casa',
+            html: '<b>Usted ha creado una casa</b>',
           });
         this
           .mailerService
           .sendMail({
-            to: "booking@rent.cu",
-            from: "noreply@nestjs.com",
-            subject: "Usted ha creado una casa  ✔",
-            text: "Usted ha creado una casa",
-            html: "<b>Usted ha creado una casa</b>"
+            to: 'booking@rent.cu',
+            from: 'noreply@nestjs.com',
+            subject: 'Usted ha creado una casa  ✔',
+            text: 'Usted ha creado una casa',
+            html: '<b>Usted ha creado una casa</b>',
           });
       });
   }
 
-  @UseGuards(AuthGuard("jwt"))
-  @Put(":id/update")
-  async update(@Param("id") id, @Body() house: HomeStay): Promise<any> {
+  @UseGuards(AuthGuard('jwt'))
+  @Put(':id/update')
+  async update(@Param('id') id, @Body() house: HomeStay): Promise<any> {
     return await this.houseService.update(house)
       .then((response: any) => {
         this.mailerService.sendMail({
-          to: "booking@rent.cu",
-          from: "booking@rent.cu",
-          subject: "Se ha actualizado la casa  ✔",
-          text: "Se ha actualizado la casa",
-          html: "<b>Se ha actualizado la casa</b>"
+          to: 'booking@rent.cu',
+          from: 'booking@rent.cu',
+          subject: 'Se ha actualizado la casa  ✔',
+          text: 'Se ha actualizado la casa',
+          html: '<b>Se ha actualizado la casa</b>',
         });
         return response;
       });
   }
 
-  @UseGuards(AuthGuard("jwt"))
-  @Delete(":id/delete")
-  async delete(@Param("id") id): Promise<any> {
+  @UseGuards(AuthGuard('jwt'))
+  @Delete(':id/delete')
+  async delete(@Param('id') id): Promise<any> {
     return this.houseService.delete(id);
   }
 
