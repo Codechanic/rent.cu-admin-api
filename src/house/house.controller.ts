@@ -3,8 +3,8 @@ import { Body, Controller, Delete, Get, Logger, Param, Post, Put, Query, Req, Us
 import { HouseService } from '../services/house.service';
 import { AuthGuard } from '@nestjs/passport';
 import { HomeStay } from '../model/homestay';
-import { MailerService } from '@nest-modules/mailer';
 import { log } from 'util';
+import { NotificationService } from '../services/notification.service';
 
 /**
  * House api endpoints
@@ -15,9 +15,9 @@ export class HouseController {
   /**
    * Controller constructor
    * @param houseService Instance of HouseService
-   * @param mailerService Instance of MailerService
+   * @param notificationService
    */
-  constructor(private readonly houseService: HouseService, private readonly mailerService: MailerService) {
+  constructor(private readonly houseService: HouseService, private readonly notificationService: NotificationService) {
   }
 
   /**
@@ -28,7 +28,10 @@ export class HouseController {
   @UseGuards(AuthGuard('jwt'))
   @Get()
   async findAll(@Query() query): Promise<HomeStay[]> {
-    log(query);
+
+    /* return all houses retrieved using house service */
+    // log(query.take.toString());
+    // log(query.skip.toString());
     return this.houseService.findAll(query.take, query.skip);
   }
 
@@ -57,31 +60,13 @@ export class HouseController {
 
   @UseGuards(AuthGuard('jwt'))
   @Post('create')
-  async create(@Body() house: HomeStay, @Req() request: any) {
+  async create(@Body() house: HomeStay, @Req() request): Promise<any> {
     return this.houseService
       .create(house)
       .then(() => {
         // @ts-ignore
         const user = request.user;
-        this
-          .mailerService
-          .sendMail({
-            // @ts-ignore
-            to: user.username,
-            from: 'booking@rent.cu',
-            subject: 'Usted ha creado una casa  ✔',
-            text: 'Usted ha creado una casa',
-            html: '<b>Usted ha creado una casa</b>',
-          });
-        this
-          .mailerService
-          .sendMail({
-            to: 'booking@rent.cu',
-            from: 'noreply@nestjs.com',
-            subject: 'Usted ha creado una casa  ✔',
-            text: 'Usted ha creado una casa',
-            html: '<b>Usted ha creado una casa</b>',
-          });
+        this.notificationService.onHouseCreation(user);
       });
   }
 
@@ -90,13 +75,7 @@ export class HouseController {
   async update(@Param('id') id, @Body() house: HomeStay): Promise<any> {
     return await this.houseService.update(house)
       .then((response: any) => {
-        this.mailerService.sendMail({
-          to: 'booking@rent.cu',
-          from: 'booking@rent.cu',
-          subject: 'Se ha actualizado la casa  ✔',
-          text: 'Se ha actualizado la casa',
-          html: '<b>Se ha actualizado la casa</b>',
-        });
+        this.notificationService.onHouseUpdate();
         return response;
       });
   }

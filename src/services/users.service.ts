@@ -48,6 +48,14 @@ export class UsersService {
    * @param id User's id
    */
   async findById(id: any): Promise<User> {
-    return await this.userRepository.findOne({where: {id}, select:['id', 'username', 'email', 'name']});
+    return await this.userRepository.findOne({where: {id}, select: ['id', 'username', 'email', 'name']});
+  }
+
+  /**
+   * Return a userby its token
+   * @param token
+   */
+  async findByToken(token: string): Promise<User> {
+    return await this.userRepository.findOne({ where: { refreshToken: token }});
   }
 }
