@@ -1,8 +1,8 @@
 import {Body, Controller, Delete, Get, Logger, Param, Post, Put, Query, Req, UseGuards} from '@nestjs/common';
 
-import { AuthGuard } from '@nestjs/passport';
-import { CommentService } from '../services/comment.service';
-import { Comment } from '../model/comment';
+import {AuthGuard} from '@nestjs/passport';
+import {CommentService} from '../services/comment.service';
+import {Comment} from '../model/comment';
 
 @Controller('comment')
 export class CommentController {
@@ -30,8 +30,8 @@ export class CommentController {
 
   @UseGuards(AuthGuard('jwt'))
   @Get('house/:houseId')
-  async findByHouse(@Param('houseId') houseId, @Query() query): Promise<Comment[]> {
-    return this.commentService.findByHouse(houseId, query.take, query.skip);
+  async findByHouse(@Param('houseId') houseId, @Query() query): Promise<{ data: Comment[], count: number }> {
+    return this.commentService.findByHouse(houseId, query.take, query.skip, query.sortField, query.sortDirection);
   }
 
   @UseGuards(AuthGuard('jwt'))

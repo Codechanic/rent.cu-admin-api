@@ -1,14 +1,14 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { DeleteResult, Repository, UpdateResult } from 'typeorm';
+import {Injectable} from '@nestjs/common';
+import {InjectRepository} from '@nestjs/typeorm';
+import {DeleteResult, FindManyOptions, Repository, UpdateResult} from 'typeorm';
 
-import { Comment } from '../model/comment';
+import {Comment} from '../model/comment';
 
 @Injectable()
 export class CommentService {
   constructor(
-    @InjectRepository(Comment)
-    private commentRepository: Repository<Comment>,
+      @InjectRepository(Comment)
+      private commentRepository: Repository<Comment>,
   ) {
 
   }
@@ -33,14 +33,31 @@ export class CommentService {
    * @param houseId
    * @param take
    * @param skip
+   * @param sortField
+   * @param sortDirection
    */
-  async findByHouse(houseId, take, skip): Promise<Comment[]> {
-    return this.commentRepository.find({
-      where: { homestay: houseId },
+  async findByHouse(houseId, take, skip, sortField, sortDirection): Promise<{ data: Comment[], count: number }> {
+    const options: FindManyOptions = {
       select: ['id', 'name', 'nick', 'text', 'email', 'rating', 'enabled'],
-      take,
-      skip,
-    });
+      where: {homestay: houseId},
+    };
+
+    const count = await this.commentRepository.count(options);
+
+    if (skip) {
+      options.skip = skip;
+    }
+    if (take) {
+      options.take = take;
+    }
+    if (sortField && sortDirection) {
+      options.order = {};
+      options.order[sortField] = sortDirection;
+    }
+
+    const comments = await this.commentRepository.find(options);
+
+    return {data: comments, count};
   }
 
   /**
