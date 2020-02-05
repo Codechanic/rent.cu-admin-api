@@ -27,12 +27,19 @@ export class HouseController {
    */
   @UseGuards(AuthGuard('jwt'))
   @Get()
-  async findAll(@Query() query): Promise<HomeStay[]> {
+  async findAll(@Query() query): Promise<{ data: HomeStay[], count: number }> {
+    return this.houseService.findAll(query.take, query.skip, query.sortField, query.sortDirection);
+  }
 
-    /* return all houses retrieved using house service */
-    // log(query.take.toString());
-    // log(query.skip.toString());
-    return this.houseService.findAll(query.take, query.skip);
+  /**
+   * Api endpoint to retrieve all houses by their owner's id
+   * @description Endpoint is guarded by Passport's jwt strategy
+   * (call must be made with Authorization header)
+   */
+  @UseGuards(AuthGuard('jwt'))
+  @Get('/owner/:id')
+  async findByOwner(@Param('id') id, @Query() query): Promise<{ data: HomeStay[], count: number }> {
+    return this.houseService.findByOwner(id, query.skip, query.take, query.sortField, query.sortDirection);
   }
 
   /**
@@ -50,12 +57,6 @@ export class HouseController {
   @Get(':id')
   async findById(@Param('id') id): Promise<HomeStay> {
     return this.houseService.findById(id);
-  }
-
-  @UseGuards(AuthGuard('jwt'))
-  @Get('/owner/:id')
-  async findByOwner(@Param('id') id, @Query() query): Promise<{ data: HomeStay[], count: number }> {
-    return this.houseService.findByOwner(id, query.skip, query.take);
   }
 
   @UseGuards(AuthGuard('jwt'))
