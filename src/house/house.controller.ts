@@ -68,6 +68,7 @@ export class HouseController {
         // @ts-ignore
         const user = request.user;
         this.notificationService.onHouseCreation(user);
+        return house;
       });
   }
 

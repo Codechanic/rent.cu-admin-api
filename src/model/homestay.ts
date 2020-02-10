@@ -241,7 +241,8 @@ export class HomeStay {
 
   @OneToMany(() => HomeStayPrice, (homeStayPrice: HomeStayPrice) => homeStayPrice.homestay, {
     onDelete: 'RESTRICT',
-    onUpdate: 'RESTRICT',
+    onUpdate: 'CASCADE',
+    cascade: true
   })
   homestayPrices: HomeStayPrice[];
 

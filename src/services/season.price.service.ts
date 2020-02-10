@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException, BadGatewayException, BadRequestException } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
 
@@ -7,7 +7,7 @@ import { Season } from '../model/season';
 import { SeasonRange } from '../model/season_range';
 import { HomeStay } from '../model/homestay';
 import { HomeStayChain } from '../model/homestay_chain';
-import { log } from 'util';
+import { DEFAULT_SEASONS_IDS } from '../common/constants';
 
 @Injectable()
 export class SeasonPriceService {
@@ -42,7 +42,7 @@ export class SeasonPriceService {
     );
     let seasons = homeStay.seasons;
     if (seasons.length > 0) {
-      const seasonId = seasons.map( s => s.id);
+      const seasonId = seasons.map(s => s.id);
       const price = await this.homeStayPriceRepository.find({
         where: { homestay: id, season: In(seasonId) },
         relations: [
@@ -55,17 +55,16 @@ export class SeasonPriceService {
           'season',
         ],
       });
-      seasons =  seasons.map((s: any) => {
-        const index =  price.map((p: HomeStayPrice) => p.season.id).lastIndexOf(s.id);
-        const ranges = seasonRanges.
-        filter((sr: SeasonRange) => sr.season.id === s.id).map( str => {
+      seasons = seasons.map((s: any) => {
+        const index = price.map((p: HomeStayPrice) => p.season.id).lastIndexOf(s.id);
+        const ranges = seasonRanges.filter((sr: SeasonRange) => sr.season.id === s.id).map(str => {
           return {
             id: str.id,
             start: str.start,
             end: str.end,
           };
         });
-        s.price = price[index].price ? price[index].price : 0 ;
+        s.price = price[index].price ? price[index].price : 0;
         s.seasonRanges = ranges;
         return s;
       });
@@ -79,7 +78,7 @@ export class SeasonPriceService {
         ],
       });
       seasons = chain.seasons;
-      const seasonId = seasons.map( s => s.id);
+      const seasonId = seasons.map(s => s.id);
       const price = await this.homeStayPriceRepository.find({
         where: { homestay: id, season: In(seasonId) },
         relations: [
@@ -92,10 +91,9 @@ export class SeasonPriceService {
           'season',
         ],
       });
-      seasons =  seasons.map((s: any) => {
-        const index =  price.map((p: HomeStayPrice) => p.season ? p.season.id : null).lastIndexOf(s.id);
-        const ranges = seasonRanges.
-        filter((sr: SeasonRange) => sr.season.id === s.id).map( str => {
+      seasons = seasons.map((s: any) => {
+        const index = price.map((p: HomeStayPrice) => p.season ? p.season.id : null).lastIndexOf(s.id);
+        const ranges = seasonRanges.filter((sr: SeasonRange) => sr.season.id === s.id).map(str => {
           return {
             id: str.id,
             start: str.start,
@@ -114,18 +112,25 @@ export class SeasonPriceService {
     }
   }
 
-/**
- * Given a season, homestay, price updates this values
- * @param homeStayId
- * @param seasonId
- * @param price
- */
+  async getDefaultSeasons(): Promise<any> {
+    return await this.seasonRepository.createQueryBuilder('season')
+      .leftJoinAndSelect('season.seasonRanges', 'seasonRanges')
+      .whereInIds(DEFAULT_SEASONS_IDS)
+      .getMany();
+  }
+
+  /**
+   * Given a season, homestay, price updates this values
+   * @param homeStayId
+   * @param seasonId
+   * @param price
+   */
   async setSeasonPrice(homeStayId: number, seasonId: number, price: number) {
-    const homeStay = await this.houseRepository.findOne({ where: { id: homeStayId} });
-    const season = await this.seasonRepository.findOne({ where: { id: seasonId} });
-    if (homeStay !== undefined &&  season !== undefined) {
+    const homeStay = await this.houseRepository.findOne({ where: { id: homeStayId } });
+    const season = await this.seasonRepository.findOne({ where: { id: seasonId } });
+    if (homeStay !== undefined && season !== undefined) {
       let homeStayPrice = await this.homeStayPriceRepository.findOne({
-        where: { homeStay, season  },
+        where: { homeStay, season },
       });
       if (homeStayPrice !== undefined) {
         homeStayPrice.price = price;
@@ -163,7 +168,7 @@ export class SeasonPriceService {
           season = await this.seasonRepository.manager.save(season);
           const ranges = [];
           if (config.hasOwnProperty('ranges')) {
-            config.ranges.forEach( async r => {
+            config.ranges.forEach(async r => {
               let seasonRange = new SeasonRange();
               seasonRange.start = r.start;
               seasonRange.end = r.end;
@@ -180,22 +185,27 @@ export class SeasonPriceService {
     return false;
   }
 
+  /**
+   * Update a special
+   * @param seasonId Id of the season
+   * @param config Season configuration
+   */
   async updateSpecialSeason(seasonId, config) {
     if (seasonId !== null) {
-     const season = await this.seasonRepository.findOneOrFail({
+      const season = await this.seasonRepository.findOneOrFail({
         where: { id: seasonId },
-        relations : [
+        relations: [
           'seasonRanges',
         ],
       });
-     if (config.hasOwnProperty('name')) {
+      if (config.hasOwnProperty('name')) {
         if (config.name !== season.name) {
           season.name = config.name;
           this.seasonRepository.manager.save(season);
           if (config.hasOwnProperty('ranges')) {
             const rangesId = season.seasonRanges.map(sr => sr.id);
             await this.seasonRangeRepository.delete(rangesId);
-            config.ranges.forEach( async r => {
+            config.ranges.forEach(async r => {
               let seasonRange = new SeasonRange();
               seasonRange.start = r.start;
               seasonRange.end = r.end;
@@ -207,7 +217,7 @@ export class SeasonPriceService {
         }
       }
 
-     return season;
+      return season;
     }
     return false;
   }

@@ -16,6 +16,7 @@ import { HomeStay } from "../model/homestay";
 import { AuthGuard } from "@nestjs/passport";
 import { log } from "util";
 import { config } from "rxjs";
+import { Season } from "../../../rent.cu-admin-ui/src/app/model/season.model";
 
 /**
  * Form data controller api, for filling dropdowns on house forms
@@ -110,6 +111,12 @@ export class FormDataController {
   @Get("/extracost")
   async ExtraCost(): Promise<ExtraCost[]> {
     return this.extraOptionService.ExtraCost();
+  }
+
+  @UseGuards(AuthGuard("jwt"))
+  @Get("/seasons/default")
+  async SeasonDefault(): Promise<Season[]> {
+    return this.seasonPriceService.getDefaultSeasons();
   }
 
   /**
