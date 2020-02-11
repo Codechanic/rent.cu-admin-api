@@ -163,8 +163,8 @@ export class HouseService {
       .leftJoinAndSelect('municipality.province', 'province')
       // season and prices
       .leftJoinAndSelect('homestay.homestayPrices', 'homestayPrices')
-      .innerJoinAndSelect('homestayPrices.season', 'season')
-      .innerJoinAndSelect('season.seasonRanges', 'seasonRanges')
+      .leftJoinAndSelect('homestayPrices.season', 'season')
+      .leftJoinAndSelect('season.seasonRanges', 'seasonRanges')
       .leftJoinAndSelect('homestay.chain', 'chain')
       .leftJoinAndSelect('chain.seasons', 'default_seasons')
       .where('homestay.id = :homestayId')
