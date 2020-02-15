@@ -39,7 +39,7 @@ export class Season {
   homestayPrices: HomeStayPrice[];
 
   @OneToMany(() => SeasonRange, (seasonRange: SeasonRange) => seasonRange.season, {
-    onDelete: 'RESTRICT', onUpdate: 'RESTRICT' })
+    onDelete: 'RESTRICT', onUpdate: 'CASCADE', cascade: true })
   seasonRanges: SeasonRange[];
 
   @ManyToMany(() => HomeStayChain, (homeStayChain: HomeStayChain) => homeStayChain.seasons)

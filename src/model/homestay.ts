@@ -252,7 +252,6 @@ export class HomeStay {
   })
   homestayTranslationss: HomeStayTranslations[];
 
-  // tslint:disable-next-line:max-line-length
   @OneToMany(() => RCUContactForm, (rcuContactForm: RCUContactForm) => rcuContactForm.homestay, {
     onDelete: 'RESTRICT',
     onUpdate: 'RESTRICT',

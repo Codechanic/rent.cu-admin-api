@@ -1,13 +1,13 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
+import { Injectable } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
 
-import { DeleteResult, FindManyOptions, Repository } from 'typeorm';
+import { DeleteResult, FindManyOptions, Repository } from "typeorm";
 
-import { HomeStay } from '../model/homestay';
-import { FreeService } from '../model/homestay_freeservices';
-import { Season } from '../model/season';
-import { HomeStayChain } from '../model/homestay_chain';
-import { HomeStayPrice } from '../model/homestay_price';
+import { HomeStay } from "../model/homestay";
+import { FreeService } from "../model/homestay_freeservices";
+import { Season } from "../model/season";
+import { HomeStayChain } from "../model/homestay_chain";
+import { HomeStayPrice } from "../model/homestay_price";
 
 /**
  * House handling service
@@ -33,7 +33,7 @@ export class HouseService {
     @InjectRepository(HomeStayChain)
     private readonly homeStayChainRepository: Repository<HomeStayChain>,
     @InjectRepository(HomeStayPrice)
-    private readonly homestayPriceRepository: Repository<HomeStayPrice>,
+    private readonly homestayPriceRepository: Repository<HomeStayPrice>
   ) {
   }
 
@@ -70,7 +70,7 @@ export class HouseService {
     : Promise<{ data: HomeStay[], count: number }> {
 
     const options: FindManyOptions = {
-      where: { ownerId },
+      where: { ownerId }
     };
 
     const housesCount = await this.houseRepository.count(options);
@@ -106,7 +106,7 @@ export class HouseService {
     // set house default values
     this.setHouseDefaults(house);
 
-    // specially handle homestayPrices as theat relatinship es tricky
+    // specially handle homestayPrices as that relationship es tricky
     const homestayPrices: HomeStayPrice[] = JSON.parse(JSON.stringify(house.homestayPrices));
     house.homestayPrices = [];
 
@@ -117,9 +117,17 @@ export class HouseService {
     for (const homestayPrice of homestayPrices) {
       homestayPrice.homestay = createdHouse;
     }
-    await this.homestayPriceRepository.save<HomeStayPrice>(homestayPrices);
+    const createdHomestayPrices = await this.homestayPriceRepository.save<HomeStayPrice>(homestayPrices);
 
-    // return the newly created house with the homestayPrices proeperly associated
+    // update every homestayPrice code that was not set because the associated season needed to be saved first
+    for (const homestayPrice of createdHomestayPrices) {
+      if (homestayPrice.code === '1') {
+        homestayPrice.code = "HS#" + createdHouse.id + "S#" + homestayPrice.season.id;
+        await this.homestayPriceRepository.update(homestayPrice.id, homestayPrice);
+      }
+    }
+
+    // return the newly created house with the homestayPrices properly associated
     return await this.findById(createdHouse.id);
   }
 
@@ -130,11 +138,23 @@ export class HouseService {
   async update(house: HomeStay): Promise<HomeStay[]> {
     const houseToUpdate = await this.houseRepository.manager.findOne(HomeStay, house.id);
     for (const property in house) {
-      if (house.hasOwnProperty(property)) {
+      if (house.hasOwnProperty(property) && property !== 'id') {
         houseToUpdate[property] = house[property];
       }
     }
-    return await this.houseRepository.manager.save<HomeStay>([houseToUpdate]);
+    let updatedHouses = await this.houseRepository.manager.save<HomeStay>([houseToUpdate]);
+
+    for(const updatedHouse of updatedHouses) {
+      // update every homestayPrice code that was not set because the associated season needed to be saved first
+      for (const homestayPrice of updatedHouse.homestayPrices) {
+        if (homestayPrice.code === '1') {
+          homestayPrice.code = "HS#" + updatedHouse.id + "S#" + homestayPrice.season.id;
+          await this.homestayPriceRepository.update(homestayPrice.id, homestayPrice);
+        }
+      }
+    }
+
+    return updatedHouses
   }
 
   /**
@@ -153,22 +173,22 @@ export class HouseService {
 
     // it's necessary to use the query builder to retrieve the second level relationship of province
     // homestay -> municipality -> province
-    return await this.houseRepository.createQueryBuilder('homestay')
-      .leftJoinAndSelect('homestay.municipality', 'municipality')
-      .leftJoinAndSelect('homestay.accommodation', 'accommodation')
-      .leftJoinAndSelect('homestay.homestayFreeservices', 'homestayFreeservices')
-      .leftJoinAndSelect('homestay.homestayNotOffered', 'homestayNotOffered')
-      .leftJoinAndSelect('homestay.homestayExtracosts', 'homestayExtracosts')
-      .leftJoinAndSelect('homestay.places', 'places')
-      .leftJoinAndSelect('municipality.province', 'province')
+    return await this.houseRepository.createQueryBuilder("homestay")
+      .leftJoinAndSelect("homestay.municipality", "municipality")
+      .leftJoinAndSelect("homestay.accommodation", "accommodation")
+      .leftJoinAndSelect("homestay.homestayFreeservices", "homestayFreeservices")
+      .leftJoinAndSelect("homestay.homestayNotOffered", "homestayNotOffered")
+      .leftJoinAndSelect("homestay.homestayExtracosts", "homestayExtracosts")
+      .leftJoinAndSelect("homestay.places", "places")
+      .leftJoinAndSelect("municipality.province", "province")
       // season and prices
-      .leftJoinAndSelect('homestay.homestayPrices', 'homestayPrices')
-      .leftJoinAndSelect('homestayPrices.season', 'season')
-      .leftJoinAndSelect('season.seasonRanges', 'seasonRanges')
-      .leftJoinAndSelect('homestay.chain', 'chain')
-      .leftJoinAndSelect('chain.seasons', 'default_seasons')
-      .where('homestay.id = :homestayId')
-      .setParameter('homestayId', id)
+      .leftJoinAndSelect("homestay.homestayPrices", "homestayPrices")
+      .leftJoinAndSelect("homestayPrices.season", "season")
+      .leftJoinAndSelect("season.seasonRanges", "seasonRanges")
+      .leftJoinAndSelect("homestay.chain", "chain")
+      .leftJoinAndSelect("chain.seasons", "default_seasons")
+      .where("homestay.id = :homestayId")
+      .setParameter("homestayId", id)
       .getOne();
   }
 
@@ -177,13 +197,13 @@ export class HouseService {
    * @param house House to modify
    */
   private setHouseDefaults(house: HomeStay) {
-    house.slug = house.name.replace(/\s/g, '-').toLowerCase();
+    house.slug = house.name.replace(/\s/g, "-").toLowerCase();
     house.promo = false;
     house.enabled = false;
     house.comision = 5;
     house.showcontact = false;
     house.rank = 0;
     house.showHome = false;
-    house.note = '';
+    house.note = "";
   }
 }
