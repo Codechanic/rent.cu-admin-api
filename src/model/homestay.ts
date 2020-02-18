@@ -242,7 +242,7 @@ export class HomeStay {
   @OneToMany(() => HomeStayPrice, (homeStayPrice: HomeStayPrice) => homeStayPrice.homestay, {
     onDelete: 'RESTRICT',
     onUpdate: 'CASCADE',
-    cascade: true
+    cascade: true,
   })
   homestayPrices: HomeStayPrice[];
 
@@ -341,5 +341,11 @@ export class HomeStay {
   @ManyToOne(() => User)
   @JoinColumn({ name: 'owner_id' })
   ownerId: bigint;
+
+  @Column('date', {
+    nullable: false,
+    name: 'deleted_at',
+  })
+  deletedAt: string;
 
 }
