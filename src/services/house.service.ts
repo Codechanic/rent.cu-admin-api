@@ -1,13 +1,14 @@
-import { Injectable } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 
-import { DeleteResult, FindManyOptions, Repository } from "typeorm";
+import { DeleteResult, FindManyOptions, Repository } from 'typeorm';
 
-import { HomeStay } from "../model/homestay";
-import { FreeService } from "../model/homestay_freeservices";
-import { Season } from "../model/season";
-import { HomeStayChain } from "../model/homestay_chain";
-import { HomeStayPrice } from "../model/homestay_price";
+import { HomeStay } from '../model/homestay';
+import { FreeService } from '../model/homestay_freeservices';
+import { Season } from '../model/season';
+import { HomeStayChain } from '../model/homestay_chain';
+import { HomeStayPrice } from '../model/homestay_price';
+import {log} from 'util';
 
 /**
  * House handling service
@@ -127,7 +128,7 @@ export class HouseService {
     for (const homestayPrice of createdHomestayPrices) {
       if (homestayPrice.code === '1') {
         homestayPrice.code = 'HS#' + createdHouse.id + 'S#' + homestayPrice.season.id;
-        await this.homestayPriceRepository.update(homestayPrice.id, homestayPrice);
+        await this.homestayPriceRepository.save(homestayPrice);
       }
     }
 
@@ -146,6 +147,7 @@ export class HouseService {
         houseToUpdate[property] = house[property];
       }
     }
+    log(JSON.stringify(houseToUpdate));
     const updatedHouses = await this.houseRepository.manager.save<HomeStay>([houseToUpdate]);
 
     for (const updatedHouse of updatedHouses) {
@@ -153,7 +155,7 @@ export class HouseService {
       for (const homestayPrice of updatedHouse.homestayPrices) {
         if (homestayPrice.code === '1') {
           homestayPrice.code = 'HS#' + updatedHouse.id + 'S#' + homestayPrice.season.id;
-          await this.homestayPriceRepository.update(homestayPrice.id, homestayPrice);
+          await this.homestayPriceRepository.save(homestayPrice);
         }
       }
     }
@@ -211,7 +213,5 @@ export class HouseService {
     house.comision = 5;
     house.showcontact = false;
     house.rank = 0;
-    house.showHome = false;
-    house.note = '';
   }
 }
