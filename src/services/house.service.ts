@@ -1,7 +1,7 @@
 import {Injectable} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
 
-import {DeleteResult, FindManyOptions, Repository, UpdateResult} from 'typeorm';
+import {FindManyOptions, Repository, UpdateResult} from 'typeorm';
 
 import {HomeStay} from '../model/homestay';
 import {FreeService} from '../model/homestay_freeservices';
@@ -60,7 +60,7 @@ export class HouseService {
 
     options.where = {
       deletedAt: null,
-    }
+    };
 
     const houses = await this.houseRepository.find(options);
 
@@ -102,7 +102,7 @@ export class HouseService {
       : Promise<{ data: HomeStay[], count: number }> {
 
     const options: FindManyOptions = {
-      where: { ownerId, deletedAt: null },
+      where: {ownerId, deletedAt: null},
     };
 
     const housesCount = await this.houseRepository.count(options);
