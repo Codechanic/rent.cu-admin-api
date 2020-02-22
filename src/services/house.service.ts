@@ -58,6 +58,10 @@ export class HouseService {
       options.order[sortField] = sortDirection;
     }
 
+    options.where = {
+      deletedAt: null,
+    }
+
     const houses = await this.houseRepository.find(options);
 
     return {data: houses, count: housesCount};
@@ -98,7 +102,7 @@ export class HouseService {
       : Promise<{ data: HomeStay[], count: number }> {
 
     const options: FindManyOptions = {
-      where: {ownerId},
+      where: { ownerId, deletedAt: null },
     };
 
     const housesCount = await this.houseRepository.count(options);
@@ -190,8 +194,11 @@ export class HouseService {
    * Delete a house by its id
    * @param id House Id
    */
-  async delete(id): Promise<DeleteResult> {
-    return await this.houseRepository.delete(id);
+  async delete(id): Promise<any> {
+    const houseToUpdate = await this.houseRepository.manager.findOne(HomeStay, id);
+    const date = new Date();
+    houseToUpdate.deletedAt = date.getFullYear() + '-' + date.getMonth() + '-' + date.getDay();
+    return await this.houseRepository.manager.save<HomeStay>([houseToUpdate]);
   }
 
   /**

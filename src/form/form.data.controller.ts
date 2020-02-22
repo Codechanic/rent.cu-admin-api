@@ -1,27 +1,27 @@
-import { Body, Controller, Delete, Get, Logger, Param, Post, Put, UseGuards, Req } from "@nestjs/common";
-import { RegionService } from "../services/region.service";
-import { Province } from "../model/province";
-import { Municipality } from "../model/municipality";
-import { AccommodationTypeService } from "../services/accommodation.service";
-import { AccommodationType } from "../model/accommodationType";
-import { LocationType } from "../model/location";
-import { FreeService } from "../model/homestay_freeservices";
-import { FreeServiceService } from "../services/freeservice.service";
-import { Place } from "../model/place";
-import { ExtraOptionService } from "../services/extra.option.service";
-import { NotOffered } from "../model/homestay_notoffered";
-import { ExtraCost } from "../model/homestay_extracost";
-import { SeasonPriceService } from "../services/season.price.service";
-import { HomeStay } from "../model/homestay";
-import { AuthGuard } from "@nestjs/passport";
-import { log } from "util";
-import { config } from "rxjs";
-import { Season } from "../../../rent.cu-admin-ui/src/app/model/season.model";
+import { Body, Controller, Delete, Get, Logger, Param, Post, Put, UseGuards, Req } from '@nestjs/common';
+import { RegionService } from '../services/region.service';
+import { Province } from '../model/province';
+import { Municipality } from '../model/municipality';
+import { AccommodationTypeService } from '../services/accommodation.service';
+import { AccommodationType } from '../model/accommodationType';
+import { LocationType } from '../model/location';
+import { FreeService } from '../model/homestay_freeservices';
+import { FreeServiceService } from '../services/freeservice.service';
+import { Place } from '../model/place';
+import { ExtraOptionService } from '../services/extra.option.service';
+import { NotOffered } from '../model/homestay_notoffered';
+import { ExtraCost } from '../model/homestay_extracost';
+import { SeasonPriceService } from '../services/season.price.service';
+import { HomeStay } from '../model/homestay';
+import { AuthGuard } from '@nestjs/passport';
+import { log } from 'util';
+import { config } from 'rxjs';
+import { Season } from '../model/season';
 
 /**
  * Form data controller api, for filling dropdowns on house forms
  */
-@Controller("form/data")
+@Controller('form/data')
 export class FormDataController {
   /**
    * Controller constructor
