@@ -1,13 +1,13 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
+import {Injectable} from '@nestjs/common';
+import {InjectRepository} from '@nestjs/typeorm';
 
-import { DeleteResult, FindManyOptions, Repository } from 'typeorm';
+import {DeleteResult, FindManyOptions, Repository, UpdateResult} from 'typeorm';
 
-import { HomeStay } from '../model/homestay';
-import { FreeService } from '../model/homestay_freeservices';
-import { Season } from '../model/season';
-import { HomeStayChain } from '../model/homestay_chain';
-import { HomeStayPrice } from '../model/homestay_price';
+import {HomeStay} from '../model/homestay';
+import {FreeService} from '../model/homestay_freeservices';
+import {Season} from '../model/season';
+import {HomeStayChain} from '../model/homestay_chain';
+import {HomeStayPrice} from '../model/homestay_price';
 import {log} from 'util';
 
 /**
@@ -25,16 +25,16 @@ export class HouseService {
    * @param homestayPriceRepository
    */
   constructor(
-    @InjectRepository(HomeStay)
-    private readonly houseRepository: Repository<HomeStay>,
-    @InjectRepository(FreeService)
-    private readonly freeServiceRepository: Repository<FreeService>,
-    @InjectRepository(Season)
-    private readonly seasonRepository: Repository<Season>,
-    @InjectRepository(HomeStayChain)
-    private readonly homeStayChainRepository: Repository<HomeStayChain>,
-    @InjectRepository(HomeStayPrice)
-    private readonly homestayPriceRepository: Repository<HomeStayPrice>,
+      @InjectRepository(HomeStay)
+      private readonly houseRepository: Repository<HomeStay>,
+      @InjectRepository(FreeService)
+      private readonly freeServiceRepository: Repository<FreeService>,
+      @InjectRepository(Season)
+      private readonly seasonRepository: Repository<Season>,
+      @InjectRepository(HomeStayChain)
+      private readonly homeStayChainRepository: Repository<HomeStayChain>,
+      @InjectRepository(HomeStayPrice)
+      private readonly homestayPriceRepository: Repository<HomeStayPrice>,
   ) {
   }
 
@@ -60,18 +60,45 @@ export class HouseService {
 
     const houses = await this.houseRepository.find(options);
 
-    return { data: houses, count: housesCount };
+    return {data: houses, count: housesCount};
 
+  }
+
+  /**
+   * Find a house by its id
+   * @param id House's id
+   */
+  async findById(id: any): Promise<any> {
+
+    // it's necessary to use the query builder to retrieve the second level relationship of province
+    // homestay -> municipality -> province
+    return await this.houseRepository.createQueryBuilder('homestay')
+        .leftJoinAndSelect('homestay.municipality', 'municipality')
+        .leftJoinAndSelect('homestay.accommodation', 'accommodation')
+        .leftJoinAndSelect('homestay.homestayFreeservices', 'homestayFreeservices')
+        .leftJoinAndSelect('homestay.homestayNotOffered', 'homestayNotOffered')
+        .leftJoinAndSelect('homestay.homestayExtracosts', 'homestayExtracosts')
+        .leftJoinAndSelect('homestay.places', 'places')
+        .leftJoinAndSelect('municipality.province', 'province')
+        // season and prices
+        .leftJoinAndSelect('homestay.homestayPrices', 'homestayPrices')
+        .leftJoinAndSelect('homestayPrices.season', 'season')
+        .leftJoinAndSelect('season.seasonRanges', 'seasonRanges')
+        .leftJoinAndSelect('homestay.chain', 'chain')
+        .leftJoinAndSelect('chain.seasons', 'default_seasons')
+        .where('homestay.id = :homestayId')
+        .setParameter('homestayId', id)
+        .getOne();
   }
 
   /**
    * Find houses by their owner
    */
   async findByOwner(ownerId, skip, take, sortField, sortDirection)
-    : Promise<{ data: HomeStay[], count: number }> {
+      : Promise<{ data: HomeStay[], count: number }> {
 
     const options: FindManyOptions = {
-      where: { ownerId },
+      where: {ownerId},
     };
 
     const housesCount = await this.houseRepository.count(options);
@@ -89,7 +116,7 @@ export class HouseService {
 
     const houses = await this.houseRepository.find(options);
 
-    return { data: houses, count: housesCount };
+    return {data: houses, count: housesCount};
   }
 
   /**
@@ -168,30 +195,12 @@ export class HouseService {
   }
 
   /**
-   * Find a house by its id
-   * @param id House's id
+   * Enable a house by its id
+   * @param house House partial entity
    */
-  async findById(id: any): Promise<any> {
-
-    // it's necessary to use the query builder to retrieve the second level relationship of province
-    // homestay -> municipality -> province
-    return await this.houseRepository.createQueryBuilder('homestay')
-      .leftJoinAndSelect('homestay.municipality', 'municipality')
-      .leftJoinAndSelect('homestay.accommodation', 'accommodation')
-      .leftJoinAndSelect('homestay.homestayFreeservices', 'homestayFreeservices')
-      .leftJoinAndSelect('homestay.homestayNotOffered', 'homestayNotOffered')
-      .leftJoinAndSelect('homestay.homestayExtracosts', 'homestayExtracosts')
-      .leftJoinAndSelect('homestay.places', 'places')
-      .leftJoinAndSelect('municipality.province', 'province')
-      // season and prices
-      .leftJoinAndSelect('homestay.homestayPrices', 'homestayPrices')
-      .leftJoinAndSelect('homestayPrices.season', 'season')
-      .leftJoinAndSelect('season.seasonRanges', 'seasonRanges')
-      .leftJoinAndSelect('homestay.chain', 'chain')
-      .leftJoinAndSelect('chain.seasons', 'default_seasons')
-      .where('homestay.id = :homestayId')
-      .setParameter('homestayId', id)
-      .getOne();
+  async enable(house): Promise<UpdateResult> {
+    log(house);
+    return await this.houseRepository.update({id: house.id}, {enabled: true});
   }
 
   /**
