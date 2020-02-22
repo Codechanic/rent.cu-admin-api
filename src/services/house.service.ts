@@ -79,6 +79,7 @@ export class HouseService {
     return await this.houseRepository.createQueryBuilder('homestay')
         .leftJoinAndSelect('homestay.municipality', 'municipality')
         .leftJoinAndSelect('homestay.accommodation', 'accommodation')
+        .leftJoinAndSelect('homestay.location', 'location')
         .leftJoinAndSelect('homestay.homestayFreeservices', 'homestayFreeservices')
         .leftJoinAndSelect('homestay.homestayNotOffered', 'homestayNotOffered')
         .leftJoinAndSelect('homestay.homestayExtracosts', 'homestayExtracosts')
@@ -218,6 +219,8 @@ export class HouseService {
     house.slug = house.name.replace(/\s/g, '-').toLowerCase();
     house.promo = false;
     house.enabled = false;
+    house.showHome = false;
+    house.note = '';
     house.comision = 5;
     house.showcontact = false;
     house.rank = 0;

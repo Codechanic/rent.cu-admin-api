@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { HandlebarsAdapter, MailerModule } from '@nest-modules/mailer';
 
 import { AppController } from './app.controller';
 import { AuthModule } from './auth/auth.module';
@@ -8,9 +8,8 @@ import { UsersModule } from './users/users.module';
 import { AcmeRole } from './model/acme_role';
 import { User } from './model/user';
 import { FormModule } from './form/form.module';
-import entities from './house/house.entities';
 import { HouseModule } from './house/house.module';
-import { HandlebarsAdapter, MailerModule } from '@nest-modules/mailer';
+import entities from './house/house.entities';
 
 /**
  * Main app module

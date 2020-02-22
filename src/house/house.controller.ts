@@ -98,6 +98,17 @@ export class HouseController {
   }
 
   /**
+   * Api endpoint to enable a house
+   * @description Endpoint is guarded by Passport's jwt strategy
+   * (call must be made with Authorization header)
+   */
+  @UseGuards(AuthGuard('jwt'))
+  @Put('enable')
+  async enable(@Body() house): Promise<any> {
+    return this.houseService.enable(house);
+  }
+
+  /**
    * Api endpoint to delete a house
    * @description Endpoint is guarded by Passport's jwt strategy
    * (call must be made with Authorization header)
@@ -106,18 +117,6 @@ export class HouseController {
   @Delete(':id/delete')
   async delete(@Param('id') id): Promise<any> {
     return this.houseService.delete(id);
-  }
-
-  /**
-   * Api endpoint to enable a house
-   * @description Endpoint is guarded by Passport's jwt strategy
-   * (call must be made with Authorization header)
-   */
-  @UseGuards(AuthGuard('jwt'))
-  @Put('enable')
-  async enable(@Body() house): Promise<any> {
-    log(house);
-    return this.houseService.enable(house);
   }
 
 }
