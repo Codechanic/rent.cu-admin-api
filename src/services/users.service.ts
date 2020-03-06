@@ -32,7 +32,7 @@ export class UsersService {
    * @param username User's username
    */
   async findOne(username: string): Promise<User> {
-    return await this.userRepository.findOne({ where: { username }});
+    return await this.userRepository.findOne({ where: { username } });
   }
 
   /**
@@ -48,7 +48,7 @@ export class UsersService {
    * @param id User's id
    */
   async findById(id: any): Promise<User> {
-    return await this.userRepository.findOne({where: {id}, select: ['id', 'username', 'email', 'name']});
+    return await this.userRepository.findOne({ where: { id }, select: ['id', 'username', 'email', 'name'] });
   }
 
   /**
@@ -56,6 +56,17 @@ export class UsersService {
    * @param token
    */
   async findByToken(token: string): Promise<User> {
-    return await this.userRepository.findOne({ where: { refreshToken: token }});
+    return await this.userRepository.findOne({ where: { refreshToken: token } });
+  }
+
+  async update(user, id): Promise<User> {
+    const userToUpdate = await this.userRepository.manager.findOne(User, id);
+    for (const property in user) {
+      if (user.hasOwnProperty(property) && property !== 'id') {
+        userToUpdate[property] = user[property];
+      }
+    }
+
+    return await this.userRepository.manager.save(userToUpdate);
   }
 }

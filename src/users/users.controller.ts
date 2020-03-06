@@ -1,4 +1,4 @@
-import { Controller, Get, Param, UseGuards } from "@nestjs/common";
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 
 import { UsersService } from '../services/users.service';
@@ -37,5 +37,11 @@ export class UsersController {
   @Get(':id')
   async findById(@Param('id') id): Promise<User> {
     return this.usersService.findById(id);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Post('owner/:id')
+  async updateOwner(@Param('id') id, @Body() user: User): Promise<User> {
+    return await  this.usersService.update(user, id);
   }
 }
