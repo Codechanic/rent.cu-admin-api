@@ -45,8 +45,6 @@ export class HouseService {
 
     const options: FindManyOptions = {};
 
-    const housesCount = await this.houseRepository.count(options);
-
     if (skip) {
       options.skip = skip;
     }
@@ -63,6 +61,8 @@ export class HouseService {
     };
 
     const houses = await this.houseRepository.find(options);
+
+    const housesCount = await this.houseRepository.count(options);
 
     return {data: houses, count: housesCount};
 
@@ -106,8 +106,6 @@ export class HouseService {
       where: {ownerId, deletedAt: null},
     };
 
-    const housesCount = await this.houseRepository.count(options);
-
     if (skip) {
       options.skip = skip;
     }
@@ -119,6 +117,7 @@ export class HouseService {
       options.order[sortField] = sortDirection;
     }
 
+    const housesCount = await this.houseRepository.count(options);
     const houses = await this.houseRepository.find(options);
 
     return {data: houses, count: housesCount};
