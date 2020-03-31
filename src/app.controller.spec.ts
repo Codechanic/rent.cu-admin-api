@@ -5,7 +5,7 @@ import { AuthService } from './services/auth.service';
 import { UsersService } from './services/users.service';
 import { ManagerService } from './services/manager.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { User } from './model/user.entity';
+import { User } from './model/user';
 import { Repository } from 'typeorm';
 import { Manager } from './model/manager.entity';
 import { JwtModule } from '@nestjs/jwt';

@@ -75,12 +75,6 @@ export class User {
   })
   enabled: boolean;
 
-  @Column('varchar', {
-    nullable: true,
-    name: 'refresh_token',
-  })
-  refreshToken: string;
-
   @ManyToMany(() => AcmeRole, (acmeRole: AcmeRole) => acmeRole.users, { nullable: false })
   @JoinTable({ name: 'user_role' })
   acmeRoles: AcmeRole[];
