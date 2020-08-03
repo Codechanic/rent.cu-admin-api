@@ -9,7 +9,9 @@ import { AcmeRole } from './model/acme_role';
 import { User } from './model/user';
 import { FormModule } from './form/form.module';
 import { HouseModule } from './house/house.module';
+import { ImagesModule } from "./images/images.module";
 import entities from './house/house.entities';
+import { Image } from "./model/image";
 
 /**
  * Main app module
@@ -26,6 +28,7 @@ import entities from './house/house.entities';
       entities: [
         User,
         AcmeRole,
+        Image,
         ...entities,
       ],
       database: 'havanacity_db_dev',
@@ -49,6 +52,7 @@ import entities from './house/house.entities';
     UsersModule,
     HouseModule,
     FormModule,
+    ImagesModule
   ],
   controllers: [AppController],
 })
